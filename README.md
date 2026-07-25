@@ -1,6 +1,6 @@
-# 🏀 Bảng điểm bóng rổ livestream cho vMix
+# 🏀 Bảng điểm bóng rổ livestream cho vMix & OBS
 
-Bảng điểm bóng rổ **chuyên nghiệp**, nền trong suốt để phủ lên video trong vMix, **bấm điểm real-time** từ bảng điều khiển trên máy tính / điện thoại / tablet, hoặc điều khiển bằng **phím tắt vMix / Stream Deck** qua API HTTP.
+Bảng điểm bóng rổ **chuyên nghiệp**, nền trong suốt để phủ lên video trong **vMix hoặc OBS**, **bấm điểm real-time** từ bảng điều khiển trên máy tính / điện thoại / tablet, hoặc điều khiển bằng **phím tắt vMix / Stream Deck** qua API HTTP.
 
 Thiết kế bám theo mẫu: ô logo bên trái · panel **đội nhà** (nền trắng chữ xanh) · panel **đội khách** (nền xanh chữ vàng) · vạch **lỗi** vàng · dòng **Record (W–L)** · ô **hiệp** (1st/2nd/3rd/4th/OT) · **đồng hồ trận** trong viên thuốc trắng · **đồng hồ 24s** đỏ · **tên giải** phía dưới.
 
@@ -11,12 +11,14 @@ Thiết kế bám theo mẫu: ô logo bên trái · panel **đội nhà** (nền
 ## 1. Yêu cầu
 
 - **Node.js** (phiên bản 14 trở lên) — tải tại <https://nodejs.org> (bản LTS).
-- vMix (bất kỳ bản nào có input **Web Browser**).
+- **vMix** (có input *Web Browser*) **hoặc OBS** (có nguồn *Browser*).
 - Không cần cài thêm thư viện nào khác.
 
 ## 2. Chạy máy chủ
 
-Mở Terminal / CMD tại thư mục dự án và chạy:
+**Cách dễ nhất:** bấm đúp file **`start.bat`** (Windows) hoặc **`start.command`** (macOS). Cứ để cửa sổ đó mở trong suốt buổi live.
+
+Hoặc mở Terminal / CMD tại thư mục dự án và chạy:
 
 ```bash
 node server.js
@@ -31,14 +33,22 @@ Màn hình sẽ in ra các đường dẫn, ví dụ:
 
 > Đổi cổng: `PORT=9000 node server.js` (Windows CMD: `set PORT=9000 && node server.js`).
 
-## 3. Đưa bảng điểm vào vMix
+## 3. Đưa bảng điểm vào vMix hoặc OBS
 
-1. Trong vMix: **Add Input → Web Browser**.
+**Trong vMix:**
+1. **Add Input → Web Browser**.
 2. **URL**: `http://localhost:8000/scoreboard`
 3. **Width 1920 – Height 1080**, bấm **OK**.
 4. Kéo input này lên làm **Overlay** (hoặc lớp trên) — nền bảng điểm trong suốt nên chỉ hiện thanh điểm, phần còn lại xuyên thấu video.
 
-Tinh chỉnh bằng tham số URL (tùy chọn):
+**Trong OBS:**
+1. Ở khung **Sources (Nguồn)** bấm **+ → Browser (Trình duyệt)** → đặt tên → OK.
+2. **URL**: `http://localhost:8000/scoreboard`
+3. **Width 1920 – Height 1080**.
+4. Ô **Custom CSS** để nguyên mặc định; nên **bỏ tick** *"Shutdown source when not visible"* để giữ kết nối real-time. Bấm **OK**.
+5. Nền Browser Source của OBS **mặc định trong suốt** nên chỉ hiện thanh điểm — không cần chỉnh gì thêm. Kéo nguồn này lên lớp trên cùng.
+
+Tinh chỉnh bằng tham số URL (tùy chọn, thêm vào cuối URL):
 
 | Tham số | Ý nghĩa | Ví dụ |
 |---|---|---|
