@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bảng điểm bóng rổ cho vMix</title>
+  <link rel="stylesheet" href="/fonts.css" />
+  <style>
+    body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(1000px 500px at 50% -10%, #182033, #0f1116); color: #eef1f7;
+      font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+    .wrap { text-align: center; padding: 24px; max-width: 640px; }
+    h1 { font-family: "Oswald", Arial, sans-serif; font-weight: 700; font-size: 40px; margin: 0 0 6px; }
+    p { color: #97a0b2; margin: 0 0 26px; }
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 560px) { .cards { grid-template-columns: 1fr; } }
+    a.card { display: block; text-decoration: none; color: inherit; padding: 22px;
+      background: #171a22; border: 1px solid #2a2f3a; border-radius: 16px; transition: .15s; }
+    a.card:hover { border-color: #3a7bff; transform: translateY(-2px); }
+    .ic { font-size: 40px; }
+    .t { font-weight: 800; font-size: 20px; margin: 10px 0 4px; }
+    .d { color: #97a0b2; font-size: 14px; }
+    code { background: #0b0d12; border: 1px solid #2a2f3a; border-radius: 6px; padding: 1px 6px; color: #cfe3ff; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>🏀 Bảng điểm bóng rổ cho vMix</h1>
+    <p>Chọn trang bên dưới</p>
+    <div class="cards">
+      <a class="card" href="/control">
+        <div class="ic">🎮</div>
+        <div class="t">Bảng điều khiển</div>
+        <div class="d">Bấm điểm, đồng hồ, lỗi… Mở trên máy/điện thoại/tablet.</div>
+      </a>
+      <a class="card" href="/scoreboard">
+        <div class="ic">📺</div>
+        <div class="t">Bảng điểm (on-air)</div>
+        <div class="d">Thêm URL này vào vMix: <code>Web Browser</code> 1920×1080.</div>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

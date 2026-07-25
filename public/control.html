@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Bảng điều khiển — Bảng điểm bóng rổ vMix</title>
+  <link rel="stylesheet" href="/fonts.css" />
+  <link rel="stylesheet" href="/control.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">🏀 Điều khiển bảng điểm</div>
+    <div class="top-actions">
+      <span class="conn" data-el="conn">• đang kết nối…</span>
+      <button class="btn btn-ghost" data-cmd="action=visible&value=toggle">Ẩn / Hiện</button>
+      <button class="btn btn-ghost" data-cmd="action=swap">Đổi bên</button>
+      <button class="btn btn-warn" data-cmd="action=reset" data-confirm="Bắt đầu trận mới? (xoá điểm, lỗi, đồng hồ)">Trận mới</button>
+    </div>
+  </header>
+
+  <main class="grid">
+    <!-- ===================== ĐỘI NHÀ ===================== -->
+    <section class="team-card side-home">
+      <div class="tc-title">ĐỘI NHÀ</div>
+      <div class="tc-score" data-el="home-score">0</div>
+      <div class="btn-row">
+        <button class="btn score" data-cmd="action=score&team=home&points=1">+1</button>
+        <button class="btn score" data-cmd="action=score&team=home&points=2">+2</button>
+        <button class="btn score" data-cmd="action=score&team=home&points=3">+3</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn minus" data-cmd="action=score&team=home&points=-1">−1 điểm</button>
+      </div>
+      <div class="mini-row">
+        <span class="mini-label">Lỗi: <b data-el="home-fouls">0</b></span>
+        <button class="btn tiny" data-cmd="action=foul&team=home&delta=1">Lỗi +1</button>
+        <button class="btn tiny ghost" data-cmd="action=foul&team=home&delta=-1">−1</button>
+      </div>
+    </section>
+
+    <!-- ===================== TRUNG TÂM ===================== -->
+    <section class="clock-card">
+      <div class="period-block">
+        <button class="btn tiny ghost" data-cmd="action=period&delta=-1">◀</button>
+        <div class="period-val" data-el="period">Hiệp 1</div>
+        <button class="btn tiny ghost" data-cmd="action=period&delta=1">▶</button>
+      </div>
+
+      <div class="clock-val" data-el="clock">10:00</div>
+      <div class="btn-row">
+        <button class="btn clock-main" data-cmd="action=clock&op=toggle" data-el="clock-toggle">▶ Chạy</button>
+        <button class="btn ghost" data-cmd="action=clock&op=reset">Reset</button>
+      </div>
+      <div class="btn-row small">
+        <button class="btn tiny ghost" data-cmd="action=clock&op=adjust&value=-1">−1s</button>
+        <button class="btn tiny ghost" data-cmd="action=clock&op=adjust&value=1">+1s</button>
+        <input class="inp time" data-el="clock-input" placeholder="10:00" />
+        <button class="btn tiny" data-set-clock>Đặt giờ</button>
+      </div>
+
+      <div class="shot-block">
+        <div class="shot-val" data-el="shot">24</div>
+        <div class="btn-row small">
+          <button class="btn tiny" data-cmd="action=shotclock&op=reset&value=24">24s</button>
+          <button class="btn tiny" data-cmd="action=shotclock&op=reset&value=14">14s</button>
+          <button class="btn tiny" data-cmd="action=shotclock&op=toggle" data-el="shot-toggle">▶</button>
+          <button class="btn tiny ghost" data-cmd="action=shotclock&op=hide" data-el="shot-vis">Ẩn 24s</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ĐỘI KHÁCH ===================== -->
+    <section class="team-card side-away">
+      <div class="tc-title">ĐỘI KHÁCH</div>
+      <div class="tc-score" data-el="away-score">0</div>
+      <div class="btn-row">
+        <button class="btn score" data-cmd="action=score&team=away&points=1">+1</button>
+        <button class="btn score" data-cmd="action=score&team=away&points=2">+2</button>
+        <button class="btn score" data-cmd="action=score&team=away&points=3">+3</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn minus" data-cmd="action=score&team=away&points=-1">−1 điểm</button>
+      </div>
+      <div class="mini-row">
+        <span class="mini-label">Lỗi: <b data-el="away-fouls">0</b></span>
+        <button class="btn tiny" data-cmd="action=foul&team=away&delta=1">Lỗi +1</button>
+        <button class="btn tiny ghost" data-cmd="action=foul&team=away&delta=-1">−1</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== CÀI ĐẶT ĐỘI / GIẢI ===================== -->
+  <details class="panel" open>
+    <summary>⚙️ Cài đặt đội &amp; giải đấu</summary>
+    <div class="settings-grid">
+      <div class="set-col">
+        <h3>Đội nhà</h3>
+        <label>Tên <input class="inp" data-field="teams.home.name" /></label>
+        <div class="row2">
+          <label>Nền <input type="color" data-field="teams.home.color" /></label>
+          <label>Chữ <input type="color" data-field="teams.home.text" /></label>
+        </div>
+        <label>Logo (URL) <input class="inp" data-field="teams.home.logo" placeholder="https://... hoặc /logo.png" /></label>
+        <div class="row2">
+          <label>Thắng <input class="inp" type="number" data-field="teams.home.wins" /></label>
+          <label>Thua <input class="inp" type="number" data-field="teams.home.losses" /></label>
+        </div>
+      </div>
+
+      <div class="set-col">
+        <h3>Chung</h3>
+        <label>Tên giải <input class="inp" data-field="tournament" /></label>
+        <div class="row2">
+          <label>Số hiệp <input class="inp" type="number" data-field="totalPeriods" /></label>
+          <label>Phút/hiệp <input class="inp" type="number" data-field="periodMinutes" /></label>
+        </div>
+        <label>Số vạch lỗi (bonus) <input class="inp" type="number" data-field="foulSegments" /></label>
+        <div class="row2">
+          <button class="btn ghost" data-cmd="action=resetScores">Xoá điểm &amp; lỗi</button>
+          <button class="btn ghost" data-cmd="action=shotclock&op=show">Hiện 24s</button>
+        </div>
+      </div>
+
+      <div class="set-col">
+        <h3>Đội khách</h3>
+        <label>Tên <input class="inp" data-field="teams.away.name" /></label>
+        <div class="row2">
+          <label>Nền <input type="color" data-field="teams.away.color" /></label>
+          <label>Chữ <input type="color" data-field="teams.away.text" /></label>
+        </div>
+        <label>Logo (URL) <input class="inp" data-field="teams.away.logo" placeholder="https://... hoặc /logo.png" /></label>
+        <div class="row2">
+          <label>Thắng <input class="inp" type="number" data-field="teams.away.wins" /></label>
+          <label>Thua <input class="inp" type="number" data-field="teams.away.losses" /></label>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <!-- ===================== TRỢ GIÚP ===================== -->
+  <details class="panel">
+    <summary>⌨️ Phím tắt &amp; điều khiển từ vMix</summary>
+    <div class="help">
+      <p><b>Phím tắt (khi không gõ vào ô nhập):</b></p>
+      <ul class="keys">
+        <li><kbd>Q</kbd>/<kbd>W</kbd>/<kbd>E</kbd> nhà +1/+2/+3 · <kbd>A</kbd> nhà −1</li>
+        <li><kbd>U</kbd>/<kbd>I</kbd>/<kbd>O</kbd> khách +1/+2/+3 · <kbd>J</kbd> khách −1</li>
+        <li><kbd>Space</kbd> chạy/dừng đồng hồ · <kbd>S</kbd> 24s · <kbd>D</kbd> 14s · <kbd>F</kbd> chạy/dừng 24s</li>
+        <li><kbd>[</kbd>/<kbd>]</kbd> lùi/tới hiệp · <kbd>H</kbd> ẩn/hiện bảng</li>
+      </ul>
+      <p><b>Điều khiển bằng vMix / Stream Deck (gọi URL):</b></p>
+      <p>Trong vMix tạo một input <i>Web Browser</i> ẩn rồi dùng shortcut <b>Navigate</b> tới URL, ví dụ:</p>
+      <pre data-el="cmd-url">http://localhost:8000/cmd?action=score&team=home&points=2</pre>
+      <p class="dim">Một số URL hữu ích:</p>
+      <ul class="urls">
+        <li><code>/cmd?action=score&team=home&points=2</code> — đội nhà +2</li>
+        <li><code>/cmd?action=score&team=away&points=3</code> — đội khách +3</li>
+        <li><code>/cmd?action=foul&team=home&delta=1</code> — lỗi đội nhà +1</li>
+        <li><code>/cmd?action=clock&op=toggle</code> — chạy/dừng đồng hồ</li>
+        <li><code>/cmd?action=shotclock&op=reset&value=24</code> — 24s</li>
+        <li><code>/cmd?action=period&delta=1</code> — sang hiệp kế</li>
+      </ul>
+    </div>
+  </details>
+
+  <script src="/control.js"></script>
+</body>
+</html>

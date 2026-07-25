@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bảng điểm bóng rổ — vMix</title>
+  <link rel="stylesheet" href="/fonts.css" />
+  <link rel="stylesheet" href="/scoreboard.css" />
+</head>
+<body class="pos-bottom">
+  <!--
+    Tham số URL (tùy chọn):
+      ?pos=top | bottom      vị trí (mặc định bottom)
+      ?scale=1.0             tỉ lệ phóng to/thu nhỏ
+      ?y=70                  khoảng cách tới cạnh trên/dưới (px)
+  -->
+  <div id="stage" class="stage">
+    <div id="board" class="board is-hidden">
+
+      <!-- LOGO -->
+      <div class="cell cell--logo">
+        <div class="logo" data-el="logo"></div>
+      </div>
+
+      <!-- ĐỘI NHÀ -->
+      <div class="cell cell--team team--home">
+        <div class="team-main">
+          <div class="team-name" data-el="home-name">POSEIDON</div>
+          <div class="team-score" data-el="home-score">0</div>
+        </div>
+        <div class="fouls" data-el="home-fouls"></div>
+      </div>
+
+      <!-- ĐỘI KHÁCH -->
+      <div class="cell cell--team team--away">
+        <div class="team-main">
+          <div class="team-name" data-el="away-name">YOUNGKINGS</div>
+          <div class="team-score" data-el="away-score">0</div>
+        </div>
+        <div class="fouls" data-el="away-fouls"></div>
+      </div>
+
+      <!-- HIỆP / ĐỒNG HỒ / 24s -->
+      <div class="cell cell--clock">
+        <div class="period" data-el="period">1<sup>st</sup></div>
+        <div class="clock-pill"><span data-el="clock">10:00</span></div>
+        <div class="shot" data-el="shot">24</div>
+      </div>
+
+      <!-- ===== Hàng dưới (record / tên giải) ===== -->
+      <div class="cell strip strip--logo"></div>
+      <div class="cell strip strip--home">
+        <span class="rec-label">Record</span>
+        <span class="rec-val" data-el="home-record">W 0 - L 0</span>
+      </div>
+      <div class="cell strip strip--away">
+        <span class="rec-label">Record</span>
+        <span class="rec-val" data-el="away-record">W 0 - L 0</span>
+      </div>
+      <div class="cell strip strip--tour">
+        <span data-el="tournament">KINGCITY OPEN CUP 2026</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/scoreboard.js"></script>
+</body>
+</html>

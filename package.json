@@ -1,0 +1,13 @@
+{
+  "name": "vmix-basketball-scoreboard",
+  "version": "1.0.0",
+  "description": "Bảng điểm bóng rổ livestream chuyên nghiệp cho vMix — điều khiển bấm điểm real-time, đồng hồ trận & 24s, phím tắt và API HTTP cho phím tắt vMix / Stream Deck.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "license": "MIT"
+}
