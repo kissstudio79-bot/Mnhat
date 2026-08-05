@@ -3,62 +3,52 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bảng điểm bóng rổ — vMix</title>
+  <title>Bảng điểm Bóng rổ 3x3 — vMix / OBS</title>
   <link rel="stylesheet" href="/fonts.css" />
   <link rel="stylesheet" href="/scoreboard.css" />
 </head>
-<body class="pos-bottom">
+<body>
   <!--
     Tham số URL (tùy chọn):
-      ?pos=top | bottom      vị trí (mặc định bottom)
-      ?scale=1.0             tỉ lệ phóng to/thu nhỏ
-      ?y=70                  khoảng cách tới cạnh trên/dưới (px)
+      ?scale=0.9        phóng to / thu nhỏ
+      ?y=60             khoảng cách tới cạnh trên (px)
+      ?pos=center       đặt giữa màn hình (mặc định: sát trên)
   -->
   <div id="stage" class="stage">
     <div id="board" class="board is-hidden">
 
-      <!-- LOGO -->
-      <div class="cell cell--logo">
-        <div class="logo" data-el="logo"></div>
-      </div>
-
-      <!-- ĐỘI NHÀ -->
-      <div class="cell cell--team team--home">
-        <div class="team-main">
-          <div class="team-name" data-el="home-name">POSEIDON</div>
-          <div class="team-score" data-el="home-score">0</div>
+      <!-- ===== THANH TRÊN: 2 chấm màu đội + THỜI GIAN TỔNG ===== -->
+      <div class="topbar">
+        <div class="dots">
+          <span class="dot dot-home"></span>
+          <span class="dot dot-away"></span>
         </div>
-        <div class="fouls" data-el="home-fouls"></div>
+        <div class="clock"><span data-el="clock">10:00</span></div>
+        <div class="topbar-spacer"></div>
       </div>
 
-      <!-- ĐỘI KHÁCH -->
-      <div class="cell cell--team team--away">
-        <div class="team-main">
-          <div class="team-name" data-el="away-name">YOUNGKINGS</div>
-          <div class="team-score" data-el="away-score">0</div>
+      <!-- ===== 2 Ô LỚN: tên giải (trái) + logo giải (phải) ===== -->
+      <div class="banner" data-el="banner">
+        <div class="banner-title">
+          <span data-el="tournament">KINGCITY OPEN CUP 2026</span>
         </div>
-        <div class="fouls" data-el="away-fouls"></div>
+        <div class="banner-logo" data-el="event-logo"></div>
       </div>
 
-      <!-- HIỆP / ĐỒNG HỒ / 24s -->
-      <div class="cell cell--clock">
-        <div class="period" data-el="period">1<sup>st</sup></div>
-        <div class="clock-pill"><span data-el="clock">10:00</span></div>
-        <div class="shot" data-el="shot">24</div>
-      </div>
-
-      <!-- ===== Hàng dưới (record / tên giải) ===== -->
-      <div class="cell strip strip--logo"></div>
-      <div class="cell strip strip--home">
-        <span class="rec-label">Record</span>
-        <span class="rec-val" data-el="home-record">W 0 - L 0</span>
-      </div>
-      <div class="cell strip strip--away">
-        <span class="rec-label">Record</span>
-        <span class="rec-val" data-el="away-record">W 0 - L 0</span>
-      </div>
-      <div class="cell strip strip--tour">
-        <span data-el="tournament">KINGCITY OPEN CUP 2026</span>
+      <!-- ===== THANH ĐIỂM 2 ĐỘI (xếp dọc) ===== -->
+      <div class="scorebar">
+        <div class="team-row">
+          <div class="tr-logo" data-el="home-logo"></div>
+          <div class="tr-name team-fill-home" data-el="home-name">ĐỘI A</div>
+          <div class="tr-score" data-el="home-score">0</div>
+          <div class="tr-foul"><span class="cap">LỖI</span><b data-el="home-fouls">0</b></div>
+        </div>
+        <div class="team-row">
+          <div class="tr-logo" data-el="away-logo"></div>
+          <div class="tr-name team-fill-away" data-el="away-name">ĐỘI B</div>
+          <div class="tr-score" data-el="away-score">0</div>
+          <div class="tr-foul"><span class="cap">LỖI</span><b data-el="away-fouls">0</b></div>
+        </div>
       </div>
 
     </div>

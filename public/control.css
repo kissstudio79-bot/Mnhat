@@ -152,6 +152,8 @@ input[type=color] {
   background: #0e1015; cursor: pointer; margin-top: 4px;
 }
 
+.hint { margin: 14px 2px 2px; font-size: 13px; color: var(--dim); }
+.hint code { padding: 1px 6px; }
 .help { font-size: 14px; color: var(--ink); line-height: 1.6; }
 .help p { margin: 8px 0; }
 .help .dim { color: var(--dim); }

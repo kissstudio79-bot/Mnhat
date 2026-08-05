@@ -1,227 +1,146 @@
 /* =========================================================================
-   Bảng điểm bóng rổ — bám theo thiết kế mẫu (nền trong suốt cho vMix)
+   Bảng điểm Bóng rổ 3x3 — thời gian tổng + điểm + lỗi (nền trong suốt OBS/vMix)
    Khung hình chuẩn 1920 x 1080.
    ========================================================================= */
 
 :root {
-  --home-bg: #ffffff;
-  --home-fg: #123fae;
-  --away-bg: #16247a;
-  --away-fg: #ffd21e;
+  --home: #ff7a18;
+  --home-text: #ffffff;
+  --away: #4b41e6;
+  --away-text: #ffffff;
 
-  --gold: #ffd21e;
-  --red: #ff2323;
+  --gold: #e6a92c;
 
-  --steel-1: #5b626d;
-  --steel-2: #2b2f38;
-  --strip-1: #474d57;
-  --strip-2: #23272f;
+  --panel: #0d0d11;
+  --panel-2: #141419;
+  --line: rgba(0, 0, 0, .55);
+  --white-cell: #ffffff;
+  --grey-cell: #d0d3d8;
+  --ink: #f2f2f5;
+  --ink-dim: #9aa0ad;
+  --cell-ink: #14171d;
 
-  --pos-y: 66px;
+  --pos-y: 58px;
   --scale: 1;
+  --board-w: 1600px;
 
-  --font-num: "Oswald", "Saira Condensed", "Roboto Condensed", "Arial Narrow", Arial, sans-serif;
+  --font-num: "Oswald", "Arial Narrow", Arial, sans-serif;
   --font-ui: "Segoe UI", system-ui, Arial, sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 html, body {
   width: 100%; height: 100%;
-  background: transparent;            /* QUAN TRỌNG: trong suốt cho vMix */
+  background: transparent;              /* QUAN TRỌNG: trong suốt cho OBS/vMix */
   overflow: hidden;
   font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
 }
 
-/* Bệ đỡ: căn giữa ngang, đặt vị trí trên/dưới, phóng tỉ lệ */
 .stage {
   position: absolute;
-  left: 50%;
-  bottom: var(--pos-y);
-  transform: translateX(-50%) scale(var(--scale));
-  transform-origin: bottom center;
-}
-body.pos-top .stage {
-  bottom: auto;
   top: var(--pos-y);
+  left: 50%;
+  transform: translateX(-50%) scale(var(--scale));
   transform-origin: top center;
 }
+body.pos-center .stage { top: 50%; transform: translate(-50%, -50%) scale(var(--scale)); transform-origin: center; }
 
-/* ------------------------------- Thanh ---------------------------------- */
+/* ------------------------------- Khung ---------------------------------- */
 .board {
+  width: var(--board-w);
+  background: var(--panel);
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  overflow: hidden;
+  color: var(--ink);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, .6), 0 0 0 1px rgba(0, 0, 0, .5);
+  transition: opacity .4s ease, transform .4s cubic-bezier(.2, .9, .25, 1);
+}
+.board.is-hidden { opacity: 0; transform: translateY(-22px); pointer-events: none; }
+
+/* Ô màu đội */
+.team-fill-home { background-color: var(--home); background-image: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(0, 0, 0, .22)); color: var(--home-text); }
+.team-fill-away { background-color: var(--away); background-image: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(0, 0, 0, .22)); color: var(--away-text); }
+
+/* ------------------------------- Thanh trên (đồng hồ tổng) -------------- */
+.topbar {
   display: grid;
-  grid-template-columns: 132px 1fr 1fr 440px;
-  grid-template-rows: 104px 38px;
-  width: 1420px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow:
-    0 0 26px 2px rgba(150, 190, 255, .30),
-    0 14px 34px rgba(0, 0, 0, .55),
-    0 0 0 1px rgba(255, 255, 255, .06);
-  transition: opacity .45s ease, transform .45s cubic-bezier(.2, .9, .25, 1);
-}
-.board.is-hidden { opacity: 0; transform: translateY(26px); pointer-events: none; }
-body.pos-top .board.is-hidden { transform: translateY(-26px); }
-
-.cell { position: relative; }
-.cell--logo,
-.cell--clock { background: linear-gradient(180deg, var(--steel-1), var(--steel-2)); }
-.cell--logo,
-.cell--team { border-right: 2px solid rgba(0, 0, 0, .28); }
-
-/* ------------------------------- Logo ----------------------------------- */
-.cell--logo { display: flex; align-items: center; justify-content: center; padding: 8px; }
-.logo {
-  width: 100%; height: 100%;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-/* ------------------------------- Đội ------------------------------------ */
-.cell--team {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-bottom: 15px;               /* chừa chỗ cho vạch lỗi */
-  overflow: hidden;
-}
-.team--home { background: var(--home-bg); color: var(--home-fg); }
-.team--away { background: var(--away-bg); color: var(--away-fg); }
-/* Nâng cấp gradient nhẹ trên Chromium mới; vMix đời cũ vẫn có nền phẳng ở trên */
-@supports (background: color-mix(in srgb, red, blue)) {
-  .team--home { background: linear-gradient(180deg, var(--home-bg), color-mix(in srgb, var(--home-bg) 92%, #000 8%)); }
-  .team--away { background: linear-gradient(180deg, var(--away-bg), color-mix(in srgb, var(--away-bg) 86%, #000 14%)); }
-}
-
-.team-main {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 0 22px;
-}
-.team-name {
-  font-family: var(--font-num);
-  font-weight: 700;
-  font-size: 44px;
-  line-height: 1;
-  letter-spacing: .5px;
-  text-transform: uppercase;
-  color: inherit;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.team-score {
-  font-family: var(--font-num);
-  font-weight: 700;
-  font-size: 50px;
-  line-height: 1;
-  color: inherit;
-  font-variant-numeric: tabular-nums;
-  flex: 0 0 auto;
-}
-
-/* Vạch lỗi (foul) — sáng dần theo số lỗi, đủ ngưỡng = bonus */
-.fouls {
-  position: absolute;
-  left: 22px;
-  right: 22px;
-  bottom: 9px;
-  display: flex;
-  gap: 6px;
-}
-.fouls i {
-  flex: 1 1 0;
-  height: 7px;
-  border-radius: 2px;
-  background: var(--gold);
-  opacity: .20;
-}
-.fouls i.on { opacity: 1; box-shadow: 0 0 8px rgba(255, 210, 30, .75); }
-
-/* --------------------- Hiệp / đồng hồ / 24s ----------------------------- */
-.cell--clock {
-  display: flex;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 0 22px;
+  height: 84px; padding: 0 24px;
+  background: linear-gradient(180deg, #17171d, #0b0b0f);
 }
-.period {
-  font-family: var(--font-num);
-  font-weight: 700;
-  font-size: 42px;
-  line-height: 1;
-  color: #fff;
-  white-space: nowrap;
+.dots { display: inline-flex; align-items: center; justify-self: start; }
+.dot {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 2px solid #0b0b0f; box-shadow: inset 0 2px 4px rgba(255, 255, 255, .35);
 }
-.period sup { font-size: .48em; font-weight: 700; margin-left: 1px; top: -.75em; }
+.dot-home { background: var(--home); }
+.dot-away { background: var(--away); margin-left: -11px; }
+.topbar-spacer { justify-self: end; }
+.clock {
+  justify-self: center;
+  font-family: var(--font-num); font-weight: 700; font-size: 52px; line-height: 1;
+  color: #fff; font-variant-numeric: tabular-nums; letter-spacing: 2px;
+}
 
-.clock-pill {
-  flex: 0 0 auto;
-  min-width: 168px;
-  padding: 5px 16px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #ffffff, #e9edf3);
-  box-shadow: inset 0 2px 3px rgba(0, 0, 0, .18), 0 1px 0 rgba(255, 255, 255, .4);
-  text-align: center;
+/* ------------------------------- 2 ô lớn (banner) ----------------------- */
+.banner {
+  display: grid;
+  grid-template-columns: 1.62fr 1fr;
+  border-top: 2px solid var(--gold);
+  min-height: 158px;
 }
-.clock-pill span {
-  font-family: var(--font-num);
-  font-weight: 700;
-  font-size: 44px;
-  line-height: 1;
-  color: #14171d;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: .5px;
+.banner.is-hidden { display: none; }
+.banner-title {
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px 28px; text-align: center;
+  background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  border-right: 2px solid var(--gold);
 }
-.shot {
-  font-family: var(--font-num);
-  font-weight: 700;
-  font-size: 50px;
-  line-height: 1;
-  color: var(--red);
-  font-variant-numeric: tabular-nums;
-  text-shadow: 0 0 10px rgba(255, 40, 40, .45);
-  min-width: 56px;
-  text-align: center;
+.banner-title span {
+  font-family: var(--font-num); font-weight: 700; font-size: 46px; line-height: 1.06;
+  letter-spacing: 1px; text-transform: uppercase; color: #f4f4f7;
 }
-.shot.is-hidden { visibility: hidden; }
+.banner-logo {
+  background-image: none;
+  background-size: contain; background-position: center; background-repeat: no-repeat;
+  background-color: var(--panel);
+  margin: 16px; border-radius: 6px;
+}
 
-/* ----------------------- Hàng dưới (record / giải) ---------------------- */
-.strip {
-  background: linear-gradient(180deg, var(--strip-1), var(--strip-2));
-  display: flex;
-  align-items: center;
-  color: #d3d7de;
-  font-family: var(--font-ui);
-  font-size: 17px;
-  font-weight: 600;
+/* ------------------------------- Thanh điểm ----------------------------- */
+.scorebar { border-top: 2px solid var(--gold); }
+.team-row {
+  display: grid;
+  grid-template-columns: 96px 1fr 156px 132px;
+  height: 84px;
 }
-.strip--logo { border-right: 2px solid rgba(0, 0, 0, .28); }
-.strip--home,
-.strip--away {
-  justify-content: space-between;
-  padding: 0 22px;
-  border-right: 2px solid rgba(0, 0, 0, .28);
+.team-row:first-child { border-bottom: 2px solid var(--line); }
+
+.tr-logo {
+  background-color: #0b0b0f;
+  background-size: 64%; background-position: center; background-repeat: no-repeat;
+  border-right: 2px solid var(--line);
 }
-.rec-label { color: #b9bfca; font-style: italic; }
-.rec-val { color: #ffffff; font-weight: 700; font-variant-numeric: tabular-nums; }
-.strip--tour {
-  justify-content: center;
-  color: var(--gold);
-  font-weight: 800;
-  letter-spacing: 1.2px;
-  font-size: 19px;
-  text-transform: uppercase;
-  padding: 0 12px;
+.tr-name {
+  display: flex; align-items: center; padding: 0 24px;
+  font-family: var(--font-num); font-weight: 700; font-size: 34px;
+  letter-spacing: .5px; text-transform: uppercase;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  border-right: 2px solid var(--line);
 }
-.strip--tour span {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.tr-score {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--white-cell); color: var(--cell-ink);
+  font-family: var(--font-num); font-weight: 700; font-size: 50px;
+  font-variant-numeric: tabular-nums;
+  border-right: 2px solid var(--line);
 }
+.tr-foul {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--grey-cell); color: var(--cell-ink); gap: 1px;
+}
+.tr-foul .cap { font-family: var(--font-ui); font-weight: 700; font-size: 12px; letter-spacing: 2px; color: #5c616b; }
+.tr-foul b { font-family: var(--font-num); font-weight: 700; font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; }

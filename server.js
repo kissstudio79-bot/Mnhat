@@ -1,11 +1,10 @@
 /*
- * vMix Basketball Scoreboard — máy chủ đồng bộ real-time (không cần cài thêm gì)
+ * Bảng điểm Bóng rổ 3x3 — vMix / OBS — máy chủ đồng bộ real-time (không cần cài thêm gì)
  * ---------------------------------------------------------------------------
  * - Phục vụ các trang tĩnh trong ./public
- * - /events  : luồng Server-Sent Events (SSE) để bảng điểm & bảng điều khiển nhận trạng thái real-time
- * - /cmd     : API điều khiển (GET query hoặc POST JSON) — dùng cho bảng điều khiển,
- *              phím tắt vMix (Web Browser "Navigate"), Stream Deck, điện thoại...
- * - /state   : trả về trạng thái hiện tại (JSON)
+ * - /events  : luồng Server-Sent Events (SSE) real-time
+ * - /cmd     : API điều khiển (GET query hoặc POST JSON)
+ * - /state   : trạng thái hiện tại (JSON)
  *
  * Chạy:  node server.js        (hoặc  PORT=8000 node server.js)
  */
@@ -22,25 +21,22 @@ const HOST = process.env.HOST || '0.0.0.0';
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 // --------------------------------------------------------------------------
-// Trạng thái trận đấu (server là nguồn dữ liệu duy nhất)
+// Trạng thái trận đấu (3x3: chỉ thời gian tổng, điểm, lỗi)
 // --------------------------------------------------------------------------
 function defaultState() {
   const now = Date.now();
   return {
     teams: {
-      // color = màu nền panel, text = màu chữ (tên + điểm)
-      home: { name: 'POSEIDON',   score: 0, fouls: 0, wins: 0, losses: 0, color: '#ffffff', text: '#123fae', logo: '' },
-      away: { name: 'YOUNGKINGS', score: 0, fouls: 0, wins: 0, losses: 0, color: '#16247a', text: '#ffd21e', logo: '' },
+      // color = màu ô đội, text = màu chữ trên ô đội, logo = logo đội (ô đen cạnh ô màu)
+      home: { name: 'ĐỘI A', color: '#ff7a18', text: '#ffffff', score: 0, fouls: 0, logo: '' },
+      away: { name: 'ĐỘI B', color: '#4b41e6', text: '#ffffff', score: 0, fouls: 0, logo: '' },
     },
-    tournament: 'KINGCITY OPEN CUP 2026',
-    period: 1,
-    totalPeriods: 4,
-    periodMinutes: 10,                                  // thời lượng 1 hiệp (phút)
-    foulSegments: 5,                                    // số vạch lỗi hiển thị (bonus khi đủ số này)
+    tournament: 'KINGCITY OPEN CUP 2026',               // ô lớn bên trái
+    eventLogo: '',                                      // ô lớn bên phải (logo thay được)
+    periodMinutes: 10,                                  // 3x3 thường 10 phút
     gameClock: { remaining: 10 * 60 * 1000, running: false, updatedAt: now },
-    shotClock: { remaining: 24 * 1000, running: false, updatedAt: now },
-    shotVisible: true,                                  // hiện/ẩn đồng hồ 24s
-    visible: true,                                      // hiện/ẩn toàn bộ bảng điểm
+    visible: true,                                      // hiện/ẩn toàn bộ bảng
+    showBanner: true,                                   // hiện/ẩn 2 ô lớn (tên giải + logo)
     version: 0,
   };
 }
@@ -48,71 +44,57 @@ function defaultState() {
 let state = defaultState();
 
 // --------------------------------------------------------------------------
-// SSE — danh sách client đang kết nối
+// SSE
 // --------------------------------------------------------------------------
 const clients = new Set();
-
 function broadcast() {
   state.version++;
   const frame = `data: ${JSON.stringify({ type: 'state', state, serverNow: Date.now() })}\n\n`;
-  for (const res of clients) {
-    try { res.write(frame); } catch (_) { /* client đã ngắt */ }
-  }
+  for (const res of clients) { try { res.write(frame); } catch (_) {} }
 }
 
 // --------------------------------------------------------------------------
-// Tiện ích đồng hồ (đóng băng / chạy) — client tự tính giá trị đang chạy
+// Tiện ích đồng hồ
 // --------------------------------------------------------------------------
 function freezeClock(c) {
   if (c.running) {
-    const elapsed = Date.now() - c.updatedAt;
-    c.remaining = Math.max(0, c.remaining - elapsed);
-    c.running = false;
-    c.updatedAt = Date.now();
+    c.remaining = Math.max(0, c.remaining - (Date.now() - c.updatedAt));
+    c.running = false; c.updatedAt = Date.now();
   }
 }
-function startClock(c) {
-  if (!c.running) { c.running = true; c.updatedAt = Date.now(); }
-}
+function startClock(c) { if (!c.running) { c.running = true; c.updatedAt = Date.now(); } }
 function parseTime(v) {
   if (v === undefined || v === null || v === '') return null;
   v = String(v).trim();
   if (v.indexOf(':') >= 0) {
-    const parts = v.split(':');
-    const m = parseFloat(parts[0]) || 0;
-    const s = parseFloat(parts[1]) || 0;
-    return Math.round((m * 60 + s) * 1000);
+    const p = v.split(':');
+    return Math.round(((parseFloat(p[0]) || 0) * 60 + (parseFloat(p[1]) || 0)) * 1000);
   }
   const n = parseFloat(v);
-  if (isNaN(n)) return null;
-  return Math.round(n * 1000);         // số trần = giây
+  return isNaN(n) ? null : Math.round(n * 1000);
 }
-function num(v, dflt) {
-  const n = parseInt(v, 10);
-  return isNaN(n) ? dflt : n;
-}
+function num(v, dflt) { const n = parseInt(v, 10); return isNaN(n) ? dflt : n; }
 
-const BLOCKED_KEYS = { __proto__: 1, constructor: 1, prototype: 1 };
+const BLOCKED = { __proto__: 1, constructor: 1, prototype: 1 };
 function setByPath(obj, p, val) {
   const parts = String(p).split('.');
   let o = obj;
   for (let i = 0; i < parts.length - 1; i++) {
-    if (BLOCKED_KEYS[parts[i]] || !(parts[i] in o)) return;
+    if (BLOCKED[parts[i]] || !(parts[i] in o)) return;
     o = o[parts[i]];
   }
-  const last = parts[parts.length - 1];
-  if (BLOCKED_KEYS[last]) return;
-  o[last] = val;
+  if (BLOCKED[parts[parts.length - 1]]) return;
+  o[parts[parts.length - 1]] = val;
 }
 function coerce(v) {
   if (v === 'true') return true;
   if (v === 'false') return false;
-  if (v !== '' && v !== null && !isNaN(v) && /^-?\d+(\.\d+)?$/.test(String(v).trim())) return Number(v);
+  if (v !== '' && v !== null && /^-?\d+(\.\d+)?$/.test(String(v).trim())) return Number(v);
   return v;
 }
 
 // --------------------------------------------------------------------------
-// Xử lý lệnh điều khiển
+// Xử lý lệnh
 // --------------------------------------------------------------------------
 function handleCommand(q) {
   const action = q.action;
@@ -133,35 +115,14 @@ function handleCommand(q) {
       if (team) team.fouls = Math.max(0, num(q.value, 0));
       break;
 
-    case 'win':
-      if (team) team.wins = Math.max(0, team.wins + num(q.delta, 1));
-      break;
-    case 'loss':
-      if (team) team.losses = Math.max(0, team.losses + num(q.delta, 1));
-      break;
-
-    case 'period': {
-      if (q.value !== undefined) state.period = Math.max(1, num(q.value, 1));
-      else state.period = Math.max(1, state.period + num(q.delta, 1));
-      // Lỗi đồng đội reset mỗi hiệp (luật FIBA)
-      state.teams.home.fouls = 0;
-      state.teams.away.fouls = 0;
-      break;
-    }
-
     case 'clock': {
       const c = state.gameClock;
       switch (q.op) {
         case 'start': startClock(c); break;
         case 'stop': freezeClock(c); break;
         case 'toggle': c.running ? freezeClock(c) : startClock(c); break;
-        case 'adjust':
-          freezeClock(c);
-          c.remaining = Math.max(0, c.remaining + (parseTime(q.value) || 0));
-          c.updatedAt = Date.now();
-          break;
-        case 'set':
-        case 'reset': {
+        case 'adjust': freezeClock(c); c.remaining = Math.max(0, c.remaining + (parseTime(q.value) || 0)); c.updatedAt = Date.now(); break;
+        case 'set': case 'reset': {
           freezeClock(c);
           const ms = q.value !== undefined ? parseTime(q.value) : state.periodMinutes * 60 * 1000;
           if (ms !== null) { c.remaining = ms; c.updatedAt = Date.now(); }
@@ -171,35 +132,19 @@ function handleCommand(q) {
       break;
     }
 
-    case 'shotclock': {
-      const c = state.shotClock;
-      switch (q.op) {
-        case 'start': startClock(c); break;
-        case 'stop': freezeClock(c); break;
-        case 'toggle': c.running ? freezeClock(c) : startClock(c); break;
-        case 'show': state.shotVisible = true; break;
-        case 'hide': state.shotVisible = false; break;
-        case 'set':
-        case 'reset': {
-          const secs = q.value !== undefined ? parseFloat(q.value) : 24;
-          c.remaining = Math.max(0, Math.round(secs * 1000));
-          c.updatedAt = Date.now();
-          break;
-        }
-      }
-      break;
-    }
-
-    case 'set':                        // setter tổng quát: path=teams.home.name value=Lakers
+    case 'set':
       if (q.path) setByPath(state, q.path, coerce(q.value));
       break;
 
     case 'visible':
       state.visible = q.value === 'toggle' ? !state.visible : (q.value !== 'false' && q.value !== false);
       break;
+    case 'banner':
+      state.showBanner = q.value === 'toggle' ? !state.showBanner : (q.value !== 'false' && q.value !== false);
+      break;
 
     case 'swap': {
-      const tmp = state.teams.home; state.teams.home = state.teams.away; state.teams.away = tmp;
+      const t = state.teams.home; state.teams.home = state.teams.away; state.teams.away = t;
       break;
     }
 
@@ -208,24 +153,21 @@ function handleCommand(q) {
       state.teams.home.fouls = 0; state.teams.away.fouls = 0;
       break;
 
-    case 'reset': {                    // trận mới: giữ nhận diện đội, xoá điểm/lỗi/đồng hồ
+    case 'reset': {                     // trận mới: giữ nhận diện đội
       const keep = { home: { ...state.teams.home }, away: { ...state.teams.away } };
-      const tour = state.tournament;
+      const tour = state.tournament, ev = state.eventLogo;
       state = defaultState();
-      state.tournament = tour;
+      state.tournament = tour; state.eventLogo = ev;
       for (const k of ['home', 'away']) {
         state.teams[k].name = keep[k].name;
         state.teams[k].color = keep[k].color;
         state.teams[k].text = keep[k].text;
         state.teams[k].logo = keep[k].logo;
-        state.teams[k].wins = keep[k].wins;
-        state.teams[k].losses = keep[k].losses;
       }
       break;
     }
 
-    default:
-      return false;
+    default: return false;
   }
   return true;
 }
@@ -234,20 +176,15 @@ function handleCommand(q) {
 // HTTP helpers
 // --------------------------------------------------------------------------
 const MIME = {
-  '.html': 'text/html; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.js': 'application/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
+  '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
+  '.js': 'application/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8',
   '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
   '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.woff2': 'font/woff2',
 };
-
 function sendJSON(res, obj, code = 200) {
-  const body = JSON.stringify(obj);
   res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*' });
-  res.end(body);
+  res.end(JSON.stringify(obj));
 }
-
 function serveStatic(res, urlPath) {
   const safe = path.normalize(urlPath).replace(/^(\.\.[/\\])+/, '');
   const filePath = path.join(PUBLIC_DIR, safe);
@@ -258,14 +195,10 @@ function serveStatic(res, urlPath) {
     res.end(data);
   });
 }
-
 function handleSSE(req, res) {
   res.writeHead(200, {
-    'Content-Type': 'text/event-stream',
-    'Cache-Control': 'no-cache, no-transform',
-    'Connection': 'keep-alive',
-    'Access-Control-Allow-Origin': '*',
-    'X-Accel-Buffering': 'no',
+    'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache, no-transform',
+    'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*', 'X-Accel-Buffering': 'no',
   });
   res.write('retry: 2000\n\n');
   res.write(`data: ${JSON.stringify({ type: 'state', state, serverNow: Date.now() })}\n\n`);
@@ -283,13 +216,11 @@ const server = http.createServer((req, res) => {
 
   if (req.method === 'OPTIONS') {
     res.writeHead(204, {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     });
     return res.end();
   }
-
   if (pathname === '/events') return handleSSE(req, res);
   if (pathname === '/state') return sendJSON(res, { state, serverNow: Date.now() });
 
@@ -311,7 +242,6 @@ const server = http.createServer((req, res) => {
     return sendJSON(res, { ok: true, version: state.version });
   }
 
-  // Trang tĩnh & định tuyến thân thiện
   let file = pathname;
   if (file === '/') file = '/index.html';
   else if (file === '/control') file = '/control.html';
@@ -326,19 +256,16 @@ function lanIPs() {
   const out = [];
   const ifaces = os.networkInterfaces();
   for (const name of Object.keys(ifaces)) {
-    for (const ni of ifaces[name]) {
-      if (ni.family === 'IPv4' && !ni.internal) out.push(ni.address);
-    }
+    for (const ni of ifaces[name]) if (ni.family === 'IPv4' && !ni.internal) out.push(ni.address);
   }
   return out;
 }
-
 server.listen(PORT, HOST, () => {
-  console.log('\n  🏀  vMix Basketball Scoreboard đang chạy!\n');
+  console.log('\n  🏀  Bảng điểm Bóng rổ 3x3 (vMix/OBS) đang chạy!\n');
   console.log('  ┌─ Mở các đường dẫn sau:');
   console.log(`  │  • Bảng điều khiển : http://localhost:${PORT}/control`);
-  console.log(`  │  • Bảng điểm (vMix): http://localhost:${PORT}/scoreboard`);
-  console.log('  └─ Trong vMix: Add Input → Web Browser → dán URL /scoreboard (1920 x 1080).\n');
+  console.log(`  │  • Bảng điểm (OBS) : http://localhost:${PORT}/scoreboard`);
+  console.log('  └─ OBS/vMix: thêm nguồn Browser → dán URL /scoreboard (1920 x 1080).\n');
   const lans = lanIPs();
   if (lans.length) {
     console.log('  Điều khiển từ điện thoại/tablet cùng mạng Wi-Fi:');
