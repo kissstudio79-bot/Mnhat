@@ -24,14 +24,17 @@
     if (v) send('action=clock&op=set&value=' + encodeURIComponent(v));
   });
 
+  // Ô cài đặt (data-field). Với ô màu: gửi cả khi kéo (input) lẫn khi chọn xong (change).
   var fields = Array.prototype.slice.call(document.querySelectorAll('[data-field]'));
   fields.forEach(function (inp) {
-    var evt = inp.type === 'color' ? 'input' : 'change';
+    var isColor = inp.type === 'color';
     var t = null;
-    inp.addEventListener(evt, function () {
+    var fire = function () {
       clearTimeout(t);
-      t = setTimeout(function () { setField(inp.dataset.field, inp.value); }, inp.type === 'color' ? 120 : 0);
-    });
+      t = setTimeout(function () { setField(inp.dataset.field, inp.value); }, isColor ? 100 : 0);
+    };
+    inp.addEventListener('change', fire);
+    if (isColor) inp.addEventListener('input', fire);
   });
 
   var KEYS = {
@@ -47,6 +50,10 @@
     m: 'action=foul&team=away&delta=1',
     ' ': 'action=clock&op=toggle',
     r: 'action=clock&op=reset',
+    s: 'action=shotclock&op=reset&value=24',
+    d: 'action=shotclock&op=reset&value=14',
+    f: 'action=shotclock&op=toggle',
+    v: 'action=shotclock&op=togglevis',
     h: 'action=visible&value=toggle',
   };
   document.addEventListener('keydown', function (e) {
@@ -66,6 +73,7 @@
     }
     return (Math.max(0, ms) / 1000).toFixed(1);
   }
+  function fmtShot(ms) { var s = Math.max(0, ms) / 1000; return s < 5 ? s.toFixed(1) : String(Math.ceil(s)); }
 
   function fillInputs() {
     fields.forEach(function (inp) {
@@ -88,6 +96,13 @@
     ct.textContent = state.gameClock.running ? '⏸ Dừng' : '▶ Chạy';
     ct.classList.toggle('active', state.gameClock.running);
 
+    var sc = state.shotClock || {};
+    var st = el('shot-toggle');
+    st.textContent = sc.running ? '⏸' : '▶';
+    st.classList.toggle('active', !!sc.running);
+    var sv = el('shot-vis');
+    sv.textContent = sc.visible ? 'Ẩn 24s' : 'Hiện 24s';
+
     fillInputs();
     tick();
   }
@@ -95,6 +110,7 @@
   function tick() {
     if (!state) return;
     el('clock').textContent = fmtClock(liveRemaining(state.gameClock));
+    if (state.shotClock) el('shot').textContent = fmtShot(liveRemaining(state.shotClock));
   }
   setInterval(tick, 80);
 
@@ -113,6 +129,8 @@
 
   var cu = el('cmd-url');
   if (cu) cu.textContent = location.origin + '/cmd?action=score&team=home&points=2';
+  var ut = el('url-tv'); if (ut) ut.textContent = location.origin + '/tv';
+  var ul = el('url-live'); if (ul) ul.textContent = location.origin + '/scoreboard';
 
   connect();
 })();

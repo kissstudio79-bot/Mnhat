@@ -12,7 +12,7 @@
     <div class="brand">🏀 Điều khiển bảng điểm</div>
     <div class="top-actions">
       <span class="conn" data-el="conn">• đang kết nối…</span>
-      <button class="btn btn-ghost" data-cmd="action=visible&value=toggle">Ẩn / Hiện bảng</button>
+      <button class="btn btn-ghost" data-cmd="action=visible&value=toggle">Ẩn / Hiện bảng live</button>
       <button class="btn btn-ghost" data-cmd="action=swap">Đổi bên</button>
       <button class="btn btn-warn" data-cmd="action=reset" data-confirm="Bắt đầu trận mới? (xoá điểm, lỗi, đồng hồ)">Trận mới</button>
     </div>
@@ -21,7 +21,7 @@
   <main class="grid">
     <!-- ĐỘI 1 -->
     <section class="team-card side-home">
-      <div class="tc-title">ĐỘI 1 (hàng trên)</div>
+      <div class="tc-title">ĐỘI 1 — TV bên trái</div>
       <div class="tc-score" data-el="home-score">0</div>
       <div class="btn-row">
         <button class="btn score" data-cmd="action=score&team=home&points=1">+1</button>
@@ -36,7 +36,7 @@
       </div>
     </section>
 
-    <!-- ĐỒNG HỒ -->
+    <!-- ĐỒNG HỒ + SHOTCLOCK -->
     <section class="clock-card">
       <div class="tc-title" style="text-align:center">THỜI GIAN</div>
       <div class="clock-val" data-el="clock">10:00</div>
@@ -50,11 +50,21 @@
         <input class="inp time" data-el="clock-input" placeholder="10:00" />
         <button class="btn tiny" data-set-clock>Đặt giờ</button>
       </div>
+
+      <div class="shot-block">
+        <div class="shot-val" data-el="shot">24</div>
+        <div class="btn-row small">
+          <button class="btn tiny" data-cmd="action=shotclock&op=reset&value=24">24s</button>
+          <button class="btn tiny" data-cmd="action=shotclock&op=reset&value=14">14s</button>
+          <button class="btn tiny" data-cmd="action=shotclock&op=toggle" data-el="shot-toggle">▶</button>
+          <button class="btn tiny ghost" data-cmd="action=shotclock&op=togglevis" data-el="shot-vis">Ẩn 24s</button>
+        </div>
+      </div>
     </section>
 
     <!-- ĐỘI 2 -->
     <section class="team-card side-away">
-      <div class="tc-title">ĐỘI 2 (hàng dưới)</div>
+      <div class="tc-title">ĐỘI 2 — TV bên phải</div>
       <div class="tc-score" data-el="away-score">0</div>
       <div class="btn-row">
         <button class="btn score" data-cmd="action=score&team=away&points=1">+1</button>
@@ -72,28 +82,31 @@
 
   <!-- CÀI ĐẶT -->
   <details class="panel" open>
-    <summary>⚙️ Cài đặt tên &amp; màu</summary>
+    <summary>⚙️ Cài đặt tên, màu &amp; logo</summary>
     <div class="settings-grid">
       <div class="set-col">
-        <h3>Đội 1 (hàng trên)</h3>
-        <label>Tên đội (ô đen) <input class="inp" data-field="teams.home.name" /></label>
-        <label>Màu chip (màu áo) <input type="color" data-field="teams.home.color" /></label>
+        <h3>Đội 1 (TV trái · live hàng trên)</h3>
+        <label>Tên đội <input class="inp" data-field="teams.home.name" /></label>
+        <label>Màu áo (chip bảng live) <input type="color" data-field="teams.home.color" /></label>
       </div>
 
       <div class="set-col">
         <h3>Chung</h3>
-        <label>Nhãn trái (VD: U16) <input class="inp" data-field="category" /></label>
+        <label>Nhãn trái live (VD: U16) <input class="inp" data-field="category" /></label>
         <label>Tên giải (VD: INVITATION CUP) <input class="inp" data-field="tournament" /></label>
+        <label>Logo giữa (bảng TV) <input class="inp" data-field="logo" placeholder="https://... hoặc /logo.png" /></label>
         <label>Phút/trận <input class="inp" type="number" data-field="periodMinutes" /></label>
-        <button class="btn ghost" data-cmd="action=resetScores" style="margin-top:6px">Xoá điểm &amp; lỗi</button>
+        <button class="btn ghost" data-cmd="action=resetScores" style="margin-top:4px">Xoá điểm &amp; lỗi</button>
       </div>
 
       <div class="set-col">
-        <h3>Đội 2 (hàng dưới)</h3>
-        <label>Tên đội (ô đen) <input class="inp" data-field="teams.away.name" /></label>
-        <label>Màu chip (màu áo) <input type="color" data-field="teams.away.color" /></label>
+        <h3>Đội 2 (TV phải · live hàng dưới)</h3>
+        <label>Tên đội <input class="inp" data-field="teams.away.name" /></label>
+        <label>Màu áo (chip bảng live) <input type="color" data-field="teams.away.color" /></label>
       </div>
     </div>
+    <p class="hint">💡 Cả 2 màn hình dùng chung dữ liệu này — bấm 1 nút, cả TV lẫn live đều nhảy.
+      <b>Bảng TV:</b> <code data-el="url-tv">/tv</code> · <b>Bảng live (nghiêng):</b> <code data-el="url-live">/scoreboard</code></p>
   </details>
 
   <!-- TRỢ GIÚP -->
@@ -104,15 +117,16 @@
       <ul class="keys">
         <li><kbd>Q</kbd>/<kbd>W</kbd>/<kbd>E</kbd> đội 1 +1/+2/+3 · <kbd>A</kbd> đội 1 −1 · <kbd>Z</kbd> đội 1 foul +1</li>
         <li><kbd>U</kbd>/<kbd>I</kbd>/<kbd>O</kbd> đội 2 +1/+2/+3 · <kbd>K</kbd> đội 2 −1 · <kbd>M</kbd> đội 2 foul +1</li>
-        <li><kbd>Space</kbd> chạy/dừng đồng hồ · <kbd>R</kbd> reset đồng hồ · <kbd>H</kbd> ẩn/hiện bảng</li>
+        <li><kbd>Space</kbd> chạy/dừng giờ · <kbd>R</kbd> reset giờ · <kbd>S</kbd> 24s · <kbd>D</kbd> 14s · <kbd>F</kbd> chạy/dừng 24s · <kbd>V</kbd> ẩn/hiện 24s · <kbd>H</kbd> ẩn/hiện live</li>
       </ul>
       <p><b>Gọi URL (vMix Navigate / Stream Deck / điện thoại):</b></p>
       <pre data-el="cmd-url">http://localhost:8000/cmd?action=score&team=home&points=2</pre>
       <ul class="urls">
         <li><code>/cmd?action=score&team=home&points=2</code> — đội 1 +2</li>
         <li><code>/cmd?action=foul&team=away&delta=1</code> — foul đội 2 +1</li>
-        <li><code>/cmd?action=clock&op=toggle</code> — chạy/dừng đồng hồ</li>
-        <li><code>/cmd?action=clock&op=set&value=10:00</code> — đặt giờ 10:00</li>
+        <li><code>/cmd?action=clock&op=toggle</code> — chạy/dừng giờ</li>
+        <li><code>/cmd?action=shotclock&op=reset&value=24</code> — 24 giây</li>
+        <li><code>/cmd?action=shotclock&op=togglevis</code> — ẩn/hiện 24s</li>
       </ul>
     </div>
   </details>

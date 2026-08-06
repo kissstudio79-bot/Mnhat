@@ -28,6 +28,7 @@ function defaultState() {
   return {
     category: 'U16',                                   // ô nhỏ trên bên trái (đổi tên được)
     tournament: 'INVITATION CUP',                      // ô tên giải (đổi tên được)
+    logo: '',                                          // logo giữa (bảng TV) — thay được
     teams: {
       // color = màu chip (theo màu áo đội), name = tên hiển thị trong ô đen
       home: { name: '', color: '#1f4fa3', score: 0, fouls: 0 },
@@ -35,6 +36,7 @@ function defaultState() {
     },
     periodMinutes: 10,
     gameClock: { remaining: 10 * 60 * 1000, running: false, updatedAt: now },
+    shotClock: { remaining: 24 * 1000, running: false, updatedAt: now, visible: true },
     visible: true,
     version: 0,
   };
@@ -131,6 +133,23 @@ function handleCommand(q) {
       break;
     }
 
+    case 'shotclock': {
+      const c = state.shotClock;
+      switch (q.op) {
+        case 'start': startClock(c); break;
+        case 'stop': freezeClock(c); break;
+        case 'toggle': c.running ? freezeClock(c) : startClock(c); break;
+        case 'show': c.visible = true; break;
+        case 'hide': c.visible = false; break;
+        case 'togglevis': c.visible = !c.visible; break;
+        case 'set': case 'reset':
+          c.remaining = Math.max(0, Math.round((q.value !== undefined ? parseFloat(q.value) : 24) * 1000));
+          c.updatedAt = Date.now();
+          break;
+      }
+      break;
+    }
+
     case 'set':
       if (q.path) setByPath(state, q.path, coerce(q.value));
       break;
@@ -151,9 +170,9 @@ function handleCommand(q) {
 
     case 'reset': {
       const keep = { home: { ...state.teams.home }, away: { ...state.teams.away } };
-      const cat = state.category, tour = state.tournament;
+      const cat = state.category, tour = state.tournament, logo = state.logo;
       state = defaultState();
-      state.category = cat; state.tournament = tour;
+      state.category = cat; state.tournament = tour; state.logo = logo;
       for (const k of ['home', 'away']) {
         state.teams[k].name = keep[k].name;
         state.teams[k].color = keep[k].color;
@@ -239,7 +258,8 @@ const server = http.createServer((req, res) => {
   let file = pathname;
   if (file === '/') file = '/index.html';
   else if (file === '/control') file = '/control.html';
-  else if (file === '/scoreboard' || file === '/board') file = '/scoreboard.html';
+  else if (file === '/scoreboard' || file === '/board' || file === '/live') file = '/scoreboard.html';
+  else if (file === '/tv') file = '/tv.html';
   serveStatic(res, file);
 });
 

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bảng điểm TV — Bóng rổ</title>
+  <link rel="stylesheet" href="/fonts.css" />
+  <link rel="stylesheet" href="/tv.css" />
+</head>
+<body>
+  <!-- Bảng điểm chiếu lên TV (full 1920x1080). TRÁI = đội trên (home), PHẢI = đội dưới (away). -->
+  <div class="tv">
+    <div class="tv-stage" id="stage">
+
+      <!-- TRÁI = ĐỘI 1 (home) -->
+      <div class="col col-left">
+        <div class="tv-name" data-el="home-name">47HOOPS 1</div>
+        <div class="tv-box"><span data-el="home-score">0</span></div>
+        <div class="tv-fouls">
+          <div class="fl">Fouls</div>
+          <div class="fn" data-el="home-fouls">0</div>
+        </div>
+      </div>
+
+      <!-- GIỮA -->
+      <div class="col col-center">
+        <div class="tv-logo" data-el="logo"></div>
+        <div class="tv-time-label">TIME</div>
+        <div class="tv-time" data-el="clock">10:00</div>
+        <div class="tv-shot" data-el="shotwrap">
+          <div class="sl">ShotClock</div>
+          <div class="sn" data-el="shot">24</div>
+        </div>
+      </div>
+
+      <!-- PHẢI = ĐỘI 2 (away) -->
+      <div class="col col-right">
+        <div class="tv-name" data-el="away-name">47HOOPS 2</div>
+        <div class="tv-box"><span data-el="away-score">0</span></div>
+        <div class="tv-fouls">
+          <div class="fl">Fouls</div>
+          <div class="fn" data-el="away-fouls">0</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/tv.js"></script>
+</body>
+</html>

@@ -75,8 +75,8 @@ html, body {
   border: 2px solid var(--white);
   background: #000;
 }
-.team:nth-of-type(2) .chip { background: var(--home); }
-.team:nth-of-type(3) .chip { background: var(--away); }
+.team:nth-of-type(2) .chip { background: var(--home, #1f4fa3); }
+.team:nth-of-type(3) .chip { background: var(--away, #8b2332); }
 .chip + .box { margin-left: -2px; }
 
 .box--name { flex: 0 0 330px; justify-content: flex-start; padding: 0 20px; }

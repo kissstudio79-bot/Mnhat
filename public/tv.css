@@ -1,0 +1,81 @@
+/* =========================================================================
+   Bảng điểm TV (47HOOPS) — full màn hình, chiếu lên TV / màn LED.
+   Canvas 1920 x 1080, tự co giãn vừa cửa sổ.
+   ========================================================================= */
+
+:root {
+  --red: #ff2323;
+  --yellow: #ffe600;
+  --font-num: "Oswald", "Arial Narrow", Arial, sans-serif;
+  --font-ui: "Segoe UI", system-ui, Arial, sans-serif;
+  --fit: 1;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
+
+.tv {
+  position: fixed; inset: 0;
+  background: #000;
+  display: flex; align-items: center; justify-content: center;
+}
+.tv-stage {
+  position: relative;
+  width: 1920px; height: 1080px;
+  transform: scale(var(--fit));
+  transform-origin: center;
+  color: #fff;
+}
+
+/* Cột */
+.col { position: absolute; text-align: center; }
+.col-left   { left: 120px;  top: 190px; width: 520px; }
+.col-right  { right: 120px; top: 190px; width: 520px; }
+.col-center { left: 50%; transform: translateX(-50%); top: 40px; width: 470px; }
+
+/* Tên đội */
+.tv-name {
+  font-family: var(--font-num); font-weight: 700; font-size: 62px; line-height: 1;
+  letter-spacing: 1px; text-transform: uppercase; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 20px;
+}
+
+/* Ô điểm lớn */
+.tv-box {
+  width: 400px; height: 384px;
+  margin: 0 auto;
+  background: #000;
+  border: 6px solid #fff;
+  border-radius: 34px;
+  display: flex; align-items: center; justify-content: center;
+}
+.tv-box > span {
+  font-family: var(--font-num); font-weight: 700; font-size: 268px; line-height: .82;
+  color: #fff; font-variant-numeric: tabular-nums;
+}
+
+/* Fouls */
+.tv-fouls { margin-top: 26px; }
+.tv-fouls .fl { font-family: var(--font-ui); font-weight: 800; font-size: 44px; color: #fff; line-height: 1; }
+.tv-fouls .fn { font-family: var(--font-num); font-weight: 700; font-size: 92px; line-height: 1; color: var(--yellow); margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+/* Giữa */
+.tv-logo {
+  height: 190px; width: 100%;
+  background-size: contain; background-position: center; background-repeat: no-repeat;
+}
+.tv-time-label { font-family: var(--font-ui); font-weight: 800; font-size: 64px; letter-spacing: 3px; color: #fff; margin-top: 30px; line-height: 1; }
+.tv-time { font-family: var(--font-num); font-weight: 700; font-size: 118px; line-height: 1; color: var(--red); font-variant-numeric: tabular-nums; margin-top: 8px; }
+
+.tv-shot {
+  width: 430px; height: 188px;
+  margin: 44px auto 0;
+  background: #000;
+  border: 6px solid #fff;
+  border-radius: 46px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.tv-shot.is-hidden { visibility: hidden; }
+.tv-shot .sl { font-family: var(--font-ui); font-weight: 800; font-size: 48px; color: #fff; line-height: 1; }
+.tv-shot .sn { font-family: var(--font-num); font-weight: 700; font-size: 92px; line-height: 1; color: var(--red); font-variant-numeric: tabular-nums; }
