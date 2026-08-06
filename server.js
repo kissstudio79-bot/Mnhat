@@ -1,8 +1,8 @@
 /*
- * Bảng điểm Bóng rổ 3x3 — vMix / OBS — máy chủ đồng bộ real-time (không cần cài thêm gì)
+ * Bảng điểm Bóng rổ (slanted) — vMix / OBS — máy chủ đồng bộ real-time (không cần cài thêm gì)
  * ---------------------------------------------------------------------------
- * - Phục vụ các trang tĩnh trong ./public
- * - /events  : luồng Server-Sent Events (SSE) real-time
+ * - Phục vụ trang tĩnh trong ./public
+ * - /events  : luồng SSE real-time
  * - /cmd     : API điều khiển (GET query hoặc POST JSON)
  * - /state   : trạng thái hiện tại (JSON)
  *
@@ -21,22 +21,21 @@ const HOST = process.env.HOST || '0.0.0.0';
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 // --------------------------------------------------------------------------
-// Trạng thái trận đấu (3x3: chỉ thời gian tổng, điểm, lỗi)
+// Trạng thái (thời gian tổng + điểm + lỗi; nhãn hạng mục + tên giải)
 // --------------------------------------------------------------------------
 function defaultState() {
   const now = Date.now();
   return {
+    category: 'U16',                                   // ô nhỏ trên bên trái (đổi tên được)
+    tournament: 'INVITATION CUP',                      // ô tên giải (đổi tên được)
     teams: {
-      // color = màu ô đội, text = màu chữ trên ô đội, logo = logo đội (ô đen cạnh ô màu)
-      home: { name: 'ĐỘI A', color: '#ff7a18', text: '#ffffff', score: 0, fouls: 0, logo: '' },
-      away: { name: 'ĐỘI B', color: '#4b41e6', text: '#ffffff', score: 0, fouls: 0, logo: '' },
+      // color = màu chip (theo màu áo đội), name = tên hiển thị trong ô đen
+      home: { name: '', color: '#1f4fa3', score: 0, fouls: 0 },
+      away: { name: '', color: '#8b2332', score: 0, fouls: 0 },
     },
-    tournament: 'KINGCITY OPEN CUP 2026',               // ô lớn bên trái
-    eventLogo: '',                                      // ô lớn bên phải (logo thay được)
-    periodMinutes: 10,                                  // 3x3 thường 10 phút
+    periodMinutes: 10,
     gameClock: { remaining: 10 * 60 * 1000, running: false, updatedAt: now },
-    visible: true,                                      // hiện/ẩn toàn bộ bảng
-    showBanner: true,                                   // hiện/ẩn 2 ô lớn (tên giải + logo)
+    visible: true,
     version: 0,
   };
 }
@@ -54,7 +53,7 @@ function broadcast() {
 }
 
 // --------------------------------------------------------------------------
-// Tiện ích đồng hồ
+// Đồng hồ
 // --------------------------------------------------------------------------
 function freezeClock(c) {
   if (c.running) {
@@ -94,7 +93,7 @@ function coerce(v) {
 }
 
 // --------------------------------------------------------------------------
-// Xử lý lệnh
+// Lệnh
 // --------------------------------------------------------------------------
 function handleCommand(q) {
   const action = q.action;
@@ -139,9 +138,6 @@ function handleCommand(q) {
     case 'visible':
       state.visible = q.value === 'toggle' ? !state.visible : (q.value !== 'false' && q.value !== false);
       break;
-    case 'banner':
-      state.showBanner = q.value === 'toggle' ? !state.showBanner : (q.value !== 'false' && q.value !== false);
-      break;
 
     case 'swap': {
       const t = state.teams.home; state.teams.home = state.teams.away; state.teams.away = t;
@@ -153,16 +149,14 @@ function handleCommand(q) {
       state.teams.home.fouls = 0; state.teams.away.fouls = 0;
       break;
 
-    case 'reset': {                     // trận mới: giữ nhận diện đội
+    case 'reset': {
       const keep = { home: { ...state.teams.home }, away: { ...state.teams.away } };
-      const tour = state.tournament, ev = state.eventLogo;
+      const cat = state.category, tour = state.tournament;
       state = defaultState();
-      state.tournament = tour; state.eventLogo = ev;
+      state.category = cat; state.tournament = tour;
       for (const k of ['home', 'away']) {
         state.teams[k].name = keep[k].name;
         state.teams[k].color = keep[k].color;
-        state.teams[k].text = keep[k].text;
-        state.teams[k].logo = keep[k].logo;
       }
       break;
     }
@@ -261,7 +255,7 @@ function lanIPs() {
   return out;
 }
 server.listen(PORT, HOST, () => {
-  console.log('\n  🏀  Bảng điểm Bóng rổ 3x3 (vMix/OBS) đang chạy!\n');
+  console.log('\n  🏀  Bảng điểm Bóng rổ (vMix/OBS) đang chạy!\n');
   console.log('  ┌─ Mở các đường dẫn sau:');
   console.log(`  │  • Bảng điều khiển : http://localhost:${PORT}/control`);
   console.log(`  │  • Bảng điểm (OBS) : http://localhost:${PORT}/scoreboard`);

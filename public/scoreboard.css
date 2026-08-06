@@ -1,31 +1,23 @@
 /* =========================================================================
-   Bảng điểm Bóng rổ 3x3 — thời gian tổng + điểm + lỗi (nền trong suốt OBS/vMix)
+   Bảng điểm bóng rổ — layout NGHIÊNG góc dưới-trái (nền trong suốt OBS/vMix)
    Khung hình chuẩn 1920 x 1080.
    ========================================================================= */
 
 :root {
-  --home: #ff7a18;
-  --home-text: #ffffff;
-  --away: #4b41e6;
-  --away-text: #ffffff;
+  --home: #1f4fa3;          /* màu chip đội 1 (theo áo) */
+  --away: #8b2332;          /* màu chip đội 2 (theo áo) */
 
-  --gold: #e6a92c;
+  --black: #0a0a0a;
+  --white: #ffffff;
+  --grey: #dcdcdc;
 
-  --panel: #0d0d11;
-  --panel-2: #141419;
-  --line: rgba(0, 0, 0, .55);
-  --white-cell: #ffffff;
-  --grey-cell: #d0d3d8;
-  --ink: #f2f2f5;
-  --ink-dim: #9aa0ad;
-  --cell-ink: #14171d;
-
-  --pos-y: 58px;
+  --skew: -13deg;
+  --unskew: 13deg;
+  --x: 60px;                /* cách cạnh trái */
+  --y: 74px;                /* cách cạnh dưới */
   --scale: 1;
-  --board-w: 1600px;
 
   --font-num: "Oswald", "Arial Narrow", Arial, sans-serif;
-  --font-ui: "Segoe UI", system-ui, Arial, sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,114 +25,69 @@ html, body {
   width: 100%; height: 100%;
   background: transparent;              /* QUAN TRỌNG: trong suốt cho OBS/vMix */
   overflow: hidden;
-  font-family: var(--font-ui);
-  -webkit-font-smoothing: antialiased;
 }
 
-.stage {
+.stage { position: absolute; inset: 0; }
+
+/* Cả bảng: nghiêng, neo góc dưới-trái */
+.sb {
   position: absolute;
-  top: var(--pos-y);
-  left: 50%;
-  transform: translateX(-50%) scale(var(--scale));
-  transform-origin: top center;
+  left: var(--x);
+  bottom: var(--y);
+  transform: skewX(var(--skew)) scale(var(--scale));
+  transform-origin: bottom left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  transition: opacity .35s ease, transform .35s ease;
 }
-body.pos-center .stage { top: 50%; transform: translate(-50%, -50%) scale(var(--scale)); transform-origin: center; }
+.sb.is-hidden { opacity: 0; transform: skewX(var(--skew)) scale(var(--scale)) translateX(-30px); pointer-events: none; }
 
-/* ------------------------------- Khung ---------------------------------- */
-.board {
-  width: var(--board-w);
-  background: var(--panel);
-  border: 2px solid var(--gold);
-  border-radius: 8px;
+/* Hàng */
+.row { display: flex; align-items: stretch; }
+.header { margin-left: 32px; width: 500px; }
+
+/* Ô (parallelogram do cả bảng bị skew) */
+.box {
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--white);
   overflow: hidden;
-  color: var(--ink);
-  box-shadow: 0 18px 46px rgba(0, 0, 0, .6), 0 0 0 1px rgba(0, 0, 0, .5);
-  transition: opacity .4s ease, transform .4s cubic-bezier(.2, .9, .25, 1);
 }
-.board.is-hidden { opacity: 0; transform: translateY(-22px); pointer-events: none; }
+.box + .box { margin-left: -2px; }       /* gộp viền trắng giữa 2 ô = 1 đường */
+.box--dark { background: var(--black); color: var(--white); }
+.box > span { display: block; transform: skewX(var(--unskew)); white-space: nowrap; }
 
-/* Ô màu đội */
-.team-fill-home { background-color: var(--home); background-image: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(0, 0, 0, .22)); color: var(--home-text); }
-.team-fill-away { background-color: var(--away); background-image: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(0, 0, 0, .22)); color: var(--away-text); }
+/* ---- Hàng trên: U16 | INVITATION CUP | 10:00 ---- */
+.header .box { height: 48px; }
+.header .box > span { font-family: var(--font-num); font-weight: 700; letter-spacing: .5px; }
+.box--u16   { flex: 0 0 auto; padding: 0 15px; }
+.box--u16 > span { font-size: 29px; }
+.box--cup   { flex: 1 1 auto; padding: 0 16px; }
+.box--cup > span { font-size: 27px; }
+.box--clock { flex: 0 0 120px; }
+.box--clock > span { font-size: 31px; font-variant-numeric: tabular-nums; }
 
-/* ------------------------------- Thanh trên (đồng hồ tổng) -------------- */
-.topbar {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  height: 84px; padding: 0 24px;
-  background: linear-gradient(180deg, #17171d, #0b0b0f);
+/* ---- Hàng đội ---- */
+.team .box, .chip { height: 56px; }
+.chip {
+  width: 22px;
+  border: 2px solid var(--white);
+  background: #000;
 }
-.dots { display: inline-flex; align-items: center; justify-self: start; }
-.dot {
-  width: 30px; height: 30px; border-radius: 50%;
-  border: 2px solid #0b0b0f; box-shadow: inset 0 2px 4px rgba(255, 255, 255, .35);
-}
-.dot-home { background: var(--home); }
-.dot-away { background: var(--away); margin-left: -11px; }
-.topbar-spacer { justify-self: end; }
-.clock {
-  justify-self: center;
-  font-family: var(--font-num); font-weight: 700; font-size: 52px; line-height: 1;
-  color: #fff; font-variant-numeric: tabular-nums; letter-spacing: 2px;
-}
+.team:nth-of-type(2) .chip { background: var(--home); }
+.team:nth-of-type(3) .chip { background: var(--away); }
+.chip + .box { margin-left: -2px; }
 
-/* ------------------------------- 2 ô lớn (banner) ----------------------- */
-.banner {
-  display: grid;
-  grid-template-columns: 1.62fr 1fr;
-  border-top: 2px solid var(--gold);
-  min-height: 158px;
-}
-.banner.is-hidden { display: none; }
-.banner-title {
-  display: flex; align-items: center; justify-content: center;
-  padding: 16px 28px; text-align: center;
-  background: linear-gradient(180deg, var(--panel-2), var(--panel));
-  border-right: 2px solid var(--gold);
-}
-.banner-title span {
-  font-family: var(--font-num); font-weight: 700; font-size: 46px; line-height: 1.06;
-  letter-spacing: 1px; text-transform: uppercase; color: #f4f4f7;
-}
-.banner-logo {
-  background-image: none;
-  background-size: contain; background-position: center; background-repeat: no-repeat;
-  background-color: var(--panel);
-  margin: 16px; border-radius: 6px;
-}
+.box--name { flex: 0 0 330px; justify-content: flex-start; padding: 0 20px; }
+.box--name > span { font-family: var(--font-num); font-weight: 700; font-size: 31px; letter-spacing: .5px; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; }
 
-/* ------------------------------- Thanh điểm ----------------------------- */
-.scorebar { border-top: 2px solid var(--gold); }
-.team-row {
-  display: grid;
-  grid-template-columns: 96px 1fr 156px 132px;
-  height: 84px;
-}
-.team-row:first-child { border-bottom: 2px solid var(--line); }
+.box--score { flex: 0 0 80px; background: var(--white); color: var(--black); }
+.box--score > span { font-family: var(--font-num); font-weight: 700; font-size: 42px; font-variant-numeric: tabular-nums; }
 
-.tr-logo {
-  background-color: #0b0b0f;
-  background-size: 64%; background-position: center; background-repeat: no-repeat;
-  border-right: 2px solid var(--line);
+.box--fouls {
+  flex: 0 0 100px; flex-direction: column; gap: 0;
+  background: var(--grey); color: #111;
 }
-.tr-name {
-  display: flex; align-items: center; padding: 0 24px;
-  font-family: var(--font-num); font-weight: 700; font-size: 34px;
-  letter-spacing: .5px; text-transform: uppercase;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  border-right: 2px solid var(--line);
-}
-.tr-score {
-  display: flex; align-items: center; justify-content: center;
-  background: var(--white-cell); color: var(--cell-ink);
-  font-family: var(--font-num); font-weight: 700; font-size: 50px;
-  font-variant-numeric: tabular-nums;
-  border-right: 2px solid var(--line);
-}
-.tr-foul {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: var(--grey-cell); color: var(--cell-ink); gap: 1px;
-}
-.tr-foul .cap { font-family: var(--font-ui); font-weight: 700; font-size: 12px; letter-spacing: 2px; color: #5c616b; }
-.tr-foul b { font-family: var(--font-num); font-weight: 700; font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; }
+.box--fouls .fl { font-family: var(--font-num); font-weight: 700; font-size: 15px; line-height: 1.1; letter-spacing: .3px; }
+.box--fouls .fn { font-family: var(--font-num); font-weight: 700; font-size: 25px; line-height: 1; font-variant-numeric: tabular-nums; }

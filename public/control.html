@@ -3,16 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>Điều khiển — Bảng điểm Bóng rổ 3x3</title>
+  <title>Điều khiển — Bảng điểm bóng rổ</title>
   <link rel="stylesheet" href="/fonts.css" />
   <link rel="stylesheet" href="/control.css" />
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">🏀 Điều khiển 3x3</div>
+    <div class="brand">🏀 Điều khiển bảng điểm</div>
     <div class="top-actions">
       <span class="conn" data-el="conn">• đang kết nối…</span>
-      <button class="btn btn-ghost" data-cmd="action=banner&value=toggle" data-el="banner-btn">Ẩn tên giải</button>
       <button class="btn btn-ghost" data-cmd="action=visible&value=toggle">Ẩn / Hiện bảng</button>
       <button class="btn btn-ghost" data-cmd="action=swap">Đổi bên</button>
       <button class="btn btn-warn" data-cmd="action=reset" data-confirm="Bắt đầu trận mới? (xoá điểm, lỗi, đồng hồ)">Trận mới</button>
@@ -20,25 +19,26 @@
   </header>
 
   <main class="grid">
-    <!-- ĐỘI A (trên) -->
+    <!-- ĐỘI 1 -->
     <section class="team-card side-home">
-      <div class="tc-title">ĐỘI A (ô cam)</div>
+      <div class="tc-title">ĐỘI 1 (hàng trên)</div>
       <div class="tc-score" data-el="home-score">0</div>
       <div class="btn-row">
         <button class="btn score" data-cmd="action=score&team=home&points=1">+1</button>
         <button class="btn score" data-cmd="action=score&team=home&points=2">+2</button>
+        <button class="btn score" data-cmd="action=score&team=home&points=3">+3</button>
         <button class="btn minus" data-cmd="action=score&team=home&points=-1">−1</button>
       </div>
       <div class="mini-row">
-        <span class="mini-label">Lỗi: <b data-el="home-fouls">0</b></span>
-        <button class="btn tiny" data-cmd="action=foul&team=home&delta=1">Lỗi +1</button>
+        <span class="mini-label">Fouls: <b data-el="home-fouls">0</b></span>
+        <button class="btn tiny" data-cmd="action=foul&team=home&delta=1">Foul +1</button>
         <button class="btn tiny ghost" data-cmd="action=foul&team=home&delta=-1">−1</button>
       </div>
     </section>
 
-    <!-- ĐỒNG HỒ TỔNG -->
+    <!-- ĐỒNG HỒ -->
     <section class="clock-card">
-      <div class="tc-title" style="text-align:center">THỜI GIAN TỔNG</div>
+      <div class="tc-title" style="text-align:center">THỜI GIAN</div>
       <div class="clock-val" data-el="clock">10:00</div>
       <div class="btn-row">
         <button class="btn clock-main" data-cmd="action=clock&op=toggle" data-el="clock-toggle">▶ Chạy</button>
@@ -52,18 +52,19 @@
       </div>
     </section>
 
-    <!-- ĐỘI B (dưới) -->
+    <!-- ĐỘI 2 -->
     <section class="team-card side-away">
-      <div class="tc-title">ĐỘI B (ô xanh)</div>
+      <div class="tc-title">ĐỘI 2 (hàng dưới)</div>
       <div class="tc-score" data-el="away-score">0</div>
       <div class="btn-row">
         <button class="btn score" data-cmd="action=score&team=away&points=1">+1</button>
         <button class="btn score" data-cmd="action=score&team=away&points=2">+2</button>
+        <button class="btn score" data-cmd="action=score&team=away&points=3">+3</button>
         <button class="btn minus" data-cmd="action=score&team=away&points=-1">−1</button>
       </div>
       <div class="mini-row">
-        <span class="mini-label">Lỗi: <b data-el="away-fouls">0</b></span>
-        <button class="btn tiny" data-cmd="action=foul&team=away&delta=1">Lỗi +1</button>
+        <span class="mini-label">Fouls: <b data-el="away-fouls">0</b></span>
+        <button class="btn tiny" data-cmd="action=foul&team=away&delta=1">Foul +1</button>
         <button class="btn tiny ghost" data-cmd="action=foul&team=away&delta=-1">−1</button>
       </div>
     </section>
@@ -71,40 +72,28 @@
 
   <!-- CÀI ĐẶT -->
   <details class="panel" open>
-    <summary>⚙️ Cài đặt đội, giải &amp; logo</summary>
+    <summary>⚙️ Cài đặt tên &amp; màu</summary>
     <div class="settings-grid">
       <div class="set-col">
-        <h3>Đội A (ô cam)</h3>
-        <label>Tên <input class="inp" data-field="teams.home.name" /></label>
-        <div class="row2">
-          <label>Màu ô <input type="color" data-field="teams.home.color" /></label>
-          <label>Màu chữ <input type="color" data-field="teams.home.text" /></label>
-        </div>
-        <label>Logo đội (URL) <input class="inp" data-field="teams.home.logo" placeholder="https://... hoặc /logo.png" /></label>
+        <h3>Đội 1 (hàng trên)</h3>
+        <label>Tên đội (ô đen) <input class="inp" data-field="teams.home.name" /></label>
+        <label>Màu chip (màu áo) <input type="color" data-field="teams.home.color" /></label>
       </div>
 
       <div class="set-col">
-        <h3>Giải đấu</h3>
-        <label>Tên giải (ô lớn trái) <input class="inp" data-field="tournament" /></label>
-        <label>Logo giải (ô lớn phải) <input class="inp" data-field="eventLogo" placeholder="https://... hoặc /logo.png" /></label>
+        <h3>Chung</h3>
+        <label>Nhãn trái (VD: U16) <input class="inp" data-field="category" /></label>
+        <label>Tên giải (VD: INVITATION CUP) <input class="inp" data-field="tournament" /></label>
         <label>Phút/trận <input class="inp" type="number" data-field="periodMinutes" /></label>
-        <div class="row2">
-          <button class="btn ghost" data-cmd="action=resetScores">Xoá điểm &amp; lỗi</button>
-          <button class="btn ghost" data-cmd="action=banner&value=toggle">Ẩn/hiện tên giải</button>
-        </div>
+        <button class="btn ghost" data-cmd="action=resetScores" style="margin-top:6px">Xoá điểm &amp; lỗi</button>
       </div>
 
       <div class="set-col">
-        <h3>Đội B (ô xanh)</h3>
-        <label>Tên <input class="inp" data-field="teams.away.name" /></label>
-        <div class="row2">
-          <label>Màu ô <input type="color" data-field="teams.away.color" /></label>
-          <label>Màu chữ <input type="color" data-field="teams.away.text" /></label>
-        </div>
-        <label>Logo đội (URL) <input class="inp" data-field="teams.away.logo" placeholder="https://... hoặc /logo.png" /></label>
+        <h3>Đội 2 (hàng dưới)</h3>
+        <label>Tên đội (ô đen) <input class="inp" data-field="teams.away.name" /></label>
+        <label>Màu chip (màu áo) <input type="color" data-field="teams.away.color" /></label>
       </div>
     </div>
-    <p class="hint">💡 Logo: dán link ảnh online, hoặc bỏ ảnh vào thư mục <code>public/</code> rồi ghi <code>/tên-file.png</code>.</p>
   </details>
 
   <!-- TRỢ GIÚP -->
@@ -113,18 +102,17 @@
     <div class="help">
       <p><b>Phím tắt (khi không gõ vào ô nhập):</b></p>
       <ul class="keys">
-        <li><kbd>Q</kbd>/<kbd>W</kbd> đội A +1/+2 · <kbd>A</kbd> đội A −1 · <kbd>Z</kbd> đội A lỗi +1</li>
-        <li><kbd>I</kbd>/<kbd>O</kbd> đội B +1/+2 · <kbd>K</kbd> đội B −1 · <kbd>M</kbd> đội B lỗi +1</li>
-        <li><kbd>Space</kbd> chạy/dừng đồng hồ · <kbd>R</kbd> reset đồng hồ · <kbd>H</kbd> ẩn/hiện bảng · <kbd>B</kbd> ẩn/hiện tên giải</li>
+        <li><kbd>Q</kbd>/<kbd>W</kbd>/<kbd>E</kbd> đội 1 +1/+2/+3 · <kbd>A</kbd> đội 1 −1 · <kbd>Z</kbd> đội 1 foul +1</li>
+        <li><kbd>U</kbd>/<kbd>I</kbd>/<kbd>O</kbd> đội 2 +1/+2/+3 · <kbd>K</kbd> đội 2 −1 · <kbd>M</kbd> đội 2 foul +1</li>
+        <li><kbd>Space</kbd> chạy/dừng đồng hồ · <kbd>R</kbd> reset đồng hồ · <kbd>H</kbd> ẩn/hiện bảng</li>
       </ul>
       <p><b>Gọi URL (vMix Navigate / Stream Deck / điện thoại):</b></p>
       <pre data-el="cmd-url">http://localhost:8000/cmd?action=score&team=home&points=2</pre>
       <ul class="urls">
-        <li><code>/cmd?action=score&team=home&points=2</code> — đội A +2</li>
-        <li><code>/cmd?action=score&team=away&points=1</code> — đội B +1</li>
-        <li><code>/cmd?action=foul&team=home&delta=1</code> — lỗi đội A +1</li>
+        <li><code>/cmd?action=score&team=home&points=2</code> — đội 1 +2</li>
+        <li><code>/cmd?action=foul&team=away&delta=1</code> — foul đội 2 +1</li>
         <li><code>/cmd?action=clock&op=toggle</code> — chạy/dừng đồng hồ</li>
-        <li><code>/cmd?action=clock&op=reset</code> — về 10:00</li>
+        <li><code>/cmd?action=clock&op=set&value=10:00</code> — đặt giờ 10:00</li>
       </ul>
     </div>
   </details>

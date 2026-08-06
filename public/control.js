@@ -1,4 +1,4 @@
-/* Bảng điều khiển 3x3: gửi lệnh tới server, đồng bộ trạng thái qua SSE. */
+/* Bảng điều khiển: gửi lệnh tới server, đồng bộ trạng thái qua SSE. */
 (function () {
   'use strict';
 
@@ -37,16 +37,17 @@
   var KEYS = {
     q: 'action=score&team=home&points=1',
     w: 'action=score&team=home&points=2',
+    e: 'action=score&team=home&points=3',
     a: 'action=score&team=home&points=-1',
     z: 'action=foul&team=home&delta=1',
-    i: 'action=score&team=away&points=1',
-    o: 'action=score&team=away&points=2',
+    u: 'action=score&team=away&points=1',
+    i: 'action=score&team=away&points=2',
+    o: 'action=score&team=away&points=3',
     k: 'action=score&team=away&points=-1',
     m: 'action=foul&team=away&delta=1',
     ' ': 'action=clock&op=toggle',
     r: 'action=clock&op=reset',
     h: 'action=visible&value=toggle',
-    b: 'action=banner&value=toggle',
   };
   document.addEventListener('keydown', function (e) {
     var tag = (e.target.tagName || '').toLowerCase();
@@ -86,9 +87,6 @@
     var ct = el('clock-toggle');
     ct.textContent = state.gameClock.running ? '⏸ Dừng' : '▶ Chạy';
     ct.classList.toggle('active', state.gameClock.running);
-
-    var bb = el('banner-btn');
-    if (bb) bb.textContent = state.showBanner ? 'Ẩn tên giải' : 'Hiện tên giải';
 
     fillInputs();
     tick();

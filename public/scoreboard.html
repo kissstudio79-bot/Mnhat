@@ -3,52 +3,40 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bảng điểm Bóng rổ 3x3 — vMix / OBS</title>
+  <title>Bảng điểm bóng rổ — vMix / OBS</title>
   <link rel="stylesheet" href="/fonts.css" />
   <link rel="stylesheet" href="/scoreboard.css" />
 </head>
 <body>
   <!--
     Tham số URL (tùy chọn):
-      ?scale=0.9        phóng to / thu nhỏ
-      ?y=60             khoảng cách tới cạnh trên (px)
-      ?pos=center       đặt giữa màn hình (mặc định: sát trên)
+      ?scale=1.0        phóng to / thu nhỏ
+      ?x=60&y=60        khoảng cách tới cạnh trái / dưới (px)
   -->
   <div id="stage" class="stage">
-    <div id="board" class="board is-hidden">
+    <div id="board" class="sb is-hidden">
 
-      <!-- ===== THANH TRÊN: 2 chấm màu đội + THỜI GIAN TỔNG ===== -->
-      <div class="topbar">
-        <div class="dots">
-          <span class="dot dot-home"></span>
-          <span class="dot dot-away"></span>
-        </div>
-        <div class="clock"><span data-el="clock">10:00</span></div>
-        <div class="topbar-spacer"></div>
+      <!-- HÀNG TRÊN: U16 | INVITATION CUP | 10:00 -->
+      <div class="row header">
+        <div class="box box--dark box--u16"><span data-el="category">U16</span></div>
+        <div class="box box--dark box--cup"><span data-el="tournament">INVITATION CUP</span></div>
+        <div class="box box--dark box--clock"><span data-el="clock">10:00</span></div>
       </div>
 
-      <!-- ===== 2 Ô LỚN: tên giải (trái) + logo giải (phải) ===== -->
-      <div class="banner" data-el="banner">
-        <div class="banner-title">
-          <span data-el="tournament">KINGCITY OPEN CUP 2026</span>
-        </div>
-        <div class="banner-logo" data-el="event-logo"></div>
+      <!-- ĐỘI 1 -->
+      <div class="row team">
+        <div class="chip" data-el="home-chip"></div>
+        <div class="box box--dark box--name"><span data-el="home-name"></span></div>
+        <div class="box box--score"><span data-el="home-score">0</span></div>
+        <div class="box box--fouls"><span class="fl">Fouls</span><span class="fn" data-el="home-fouls">0</span></div>
       </div>
 
-      <!-- ===== THANH ĐIỂM 2 ĐỘI (xếp dọc) ===== -->
-      <div class="scorebar">
-        <div class="team-row">
-          <div class="tr-logo" data-el="home-logo"></div>
-          <div class="tr-name team-fill-home" data-el="home-name">ĐỘI A</div>
-          <div class="tr-score" data-el="home-score">0</div>
-          <div class="tr-foul"><span class="cap">LỖI</span><b data-el="home-fouls">0</b></div>
-        </div>
-        <div class="team-row">
-          <div class="tr-logo" data-el="away-logo"></div>
-          <div class="tr-name team-fill-away" data-el="away-name">ĐỘI B</div>
-          <div class="tr-score" data-el="away-score">0</div>
-          <div class="tr-foul"><span class="cap">LỖI</span><b data-el="away-fouls">0</b></div>
-        </div>
+      <!-- ĐỘI 2 -->
+      <div class="row team">
+        <div class="chip" data-el="away-chip"></div>
+        <div class="box box--dark box--name"><span data-el="away-name"></span></div>
+        <div class="box box--score"><span data-el="away-score">0</span></div>
+        <div class="box box--fouls"><span class="fl">Fouls</span><span class="fn" data-el="away-fouls">0</span></div>
       </div>
 
     </div>
