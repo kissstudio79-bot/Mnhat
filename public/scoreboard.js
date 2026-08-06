@@ -43,6 +43,9 @@
     var root = document.documentElement.style;
     root.setProperty('--home', state.teams.home.color);
     root.setProperty('--away', state.teams.away.color);
+    // set trực tiếp lên ô chip (chắc chắn hiển thị, không phụ thuộc biến CSS)
+    var hc = el('home-chip'); if (hc) hc.style.background = state.teams.home.color || '#1f4fa3';
+    var ac = el('away-chip'); if (ac) ac.style.background = state.teams.away.color || '#8b2332';
 
     setText(el('category'), state.category || '');
     setText(el('tournament'), state.tournament || '');

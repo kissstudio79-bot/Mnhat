@@ -1,13 +1,13 @@
 /* =========================================================================
-   Bảng điểm TV (47HOOPS) — full màn hình, chiếu lên TV / màn LED.
-   Canvas 1920 x 1080, tự co giãn vừa cửa sổ.
+   Bảng điểm TV (47HOOPS) — full màn hình. Canvas 1920 x 1080, tự co giãn.
    ========================================================================= */
 
 :root {
   --red: #ff2323;
   --yellow: #ffe600;
-  --font-num: "Oswald", "Arial Narrow", Arial, sans-serif;
-  --font-ui: "Segoe UI", system-ui, Arial, sans-serif;
+  /* Archivo Black = weight 400 (đã rất đậm). Oswald làm dự phòng cho tiếng Việt. */
+  --font-num: "Archivo Black", "Oswald", Arial, sans-serif;
+  --font-label: "Baloo 2", "Segoe UI", system-ui, Arial, sans-serif;
   --fit: 1;
 }
 
@@ -29,53 +29,53 @@ html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
 
 /* Cột */
 .col { position: absolute; text-align: center; }
-.col-left   { left: 120px;  top: 190px; width: 520px; }
-.col-right  { right: 120px; top: 190px; width: 520px; }
-.col-center { left: 50%; transform: translateX(-50%); top: 40px; width: 470px; }
+.col-left   { left: 80px;  top: 158px; width: 600px; }
+.col-right  { right: 80px; top: 158px; width: 600px; }
+.col-center { left: 50%; transform: translateX(-50%); top: 34px; width: 540px; }
 
 /* Tên đội */
 .tv-name {
-  font-family: var(--font-num); font-weight: 700; font-size: 62px; line-height: 1;
-  letter-spacing: 1px; text-transform: uppercase; color: #fff;
+  font-family: var(--font-num); font-weight: 400; font-size: 78px; line-height: 1;
+  letter-spacing: .5px; color: #fff;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 /* Ô điểm lớn */
 .tv-box {
-  width: 400px; height: 384px;
+  width: 470px; height: 396px;
   margin: 0 auto;
   background: #000;
-  border: 6px solid #fff;
-  border-radius: 34px;
+  border: 8px solid #fff;
+  border-radius: 44px;
   display: flex; align-items: center; justify-content: center;
 }
 .tv-box > span {
-  font-family: var(--font-num); font-weight: 700; font-size: 268px; line-height: .82;
+  font-family: var(--font-num); font-weight: 400; font-size: 250px; line-height: .74;
   color: #fff; font-variant-numeric: tabular-nums;
 }
 
 /* Fouls */
-.tv-fouls { margin-top: 26px; }
-.tv-fouls .fl { font-family: var(--font-ui); font-weight: 800; font-size: 44px; color: #fff; line-height: 1; }
-.tv-fouls .fn { font-family: var(--font-num); font-weight: 700; font-size: 92px; line-height: 1; color: var(--yellow); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.tv-fouls { margin-top: 30px; }
+.tv-fouls .fl { font-family: var(--font-label); font-weight: 800; font-size: 58px; color: #fff; line-height: 1; }
+.tv-fouls .fn { font-family: var(--font-num); font-weight: 400; font-size: 122px; line-height: 1; color: var(--yellow); margin-top: 4px; font-variant-numeric: tabular-nums; }
 
 /* Giữa */
 .tv-logo {
-  height: 190px; width: 100%;
+  height: 210px; width: 100%;
   background-size: contain; background-position: center; background-repeat: no-repeat;
 }
-.tv-time-label { font-family: var(--font-ui); font-weight: 800; font-size: 64px; letter-spacing: 3px; color: #fff; margin-top: 30px; line-height: 1; }
-.tv-time { font-family: var(--font-num); font-weight: 700; font-size: 118px; line-height: 1; color: var(--red); font-variant-numeric: tabular-nums; margin-top: 8px; }
+.tv-time-label { font-family: var(--font-label); font-weight: 800; font-size: 82px; letter-spacing: 2px; color: #fff; margin-top: 30px; line-height: 1; }
+.tv-time { font-family: var(--font-num); font-weight: 400; font-size: 150px; line-height: 1; color: var(--red); font-variant-numeric: tabular-nums; margin-top: 10px; }
 
 .tv-shot {
-  width: 430px; height: 188px;
-  margin: 44px auto 0;
+  width: 500px; height: 220px;
+  margin: 46px auto 0;
   background: #000;
-  border: 6px solid #fff;
-  border-radius: 46px;
+  border: 8px solid #fff;
+  border-radius: 54px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
 .tv-shot.is-hidden { visibility: hidden; }
-.tv-shot .sl { font-family: var(--font-ui); font-weight: 800; font-size: 48px; color: #fff; line-height: 1; }
-.tv-shot .sn { font-family: var(--font-num); font-weight: 700; font-size: 92px; line-height: 1; color: var(--red); font-variant-numeric: tabular-nums; }
+.tv-shot .sl { font-family: var(--font-label); font-weight: 800; font-size: 60px; color: #fff; line-height: 1.05; }
+.tv-shot .sn { font-family: var(--font-num); font-weight: 400; font-size: 116px; line-height: 1; color: var(--red); font-variant-numeric: tabular-nums; }
