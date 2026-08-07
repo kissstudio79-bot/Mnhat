@@ -26,7 +26,6 @@
       <div class="btn-row">
         <button class="btn score" data-cmd="action=score&team=home&points=1">+1</button>
         <button class="btn score" data-cmd="action=score&team=home&points=2">+2</button>
-        <button class="btn score" data-cmd="action=score&team=home&points=3">+3</button>
         <button class="btn minus" data-cmd="action=score&team=home&points=-1">−1</button>
       </div>
       <div class="mini-row">
@@ -52,12 +51,12 @@
       </div>
 
       <div class="shot-block">
-        <div class="shot-val" data-el="shot">24</div>
+        <div class="shot-title">TẤN CÔNG (3x3 · 12s)</div>
+        <div class="shot-val" data-el="shot">12</div>
+        <button class="btn shot-reset" data-cmd="action=shotclock&op=reset&value=12">⟳ Reset 12 giây</button>
         <div class="btn-row small">
-          <button class="btn tiny" data-cmd="action=shotclock&op=reset&value=24">24s</button>
-          <button class="btn tiny" data-cmd="action=shotclock&op=reset&value=14">14s</button>
-          <button class="btn tiny" data-cmd="action=shotclock&op=toggle" data-el="shot-toggle">▶</button>
-          <button class="btn tiny ghost" data-cmd="action=shotclock&op=togglevis" data-el="shot-vis">Ẩn 24s</button>
+          <button class="btn tiny" data-cmd="action=shotclock&op=toggle" data-el="shot-toggle">▶ Chạy/Dừng</button>
+          <button class="btn tiny ghost" data-cmd="action=shotclock&op=togglevis" data-el="shot-vis">Ẩn</button>
         </div>
       </div>
     </section>
@@ -69,7 +68,6 @@
       <div class="btn-row">
         <button class="btn score" data-cmd="action=score&team=away&points=1">+1</button>
         <button class="btn score" data-cmd="action=score&team=away&points=2">+2</button>
-        <button class="btn score" data-cmd="action=score&team=away&points=3">+3</button>
         <button class="btn minus" data-cmd="action=score&team=away&points=-1">−1</button>
       </div>
       <div class="mini-row">
@@ -152,9 +150,9 @@
     <div class="help">
       <p><b>Phím tắt (khi không gõ vào ô nhập):</b></p>
       <ul class="keys">
-        <li><kbd>Q</kbd>/<kbd>W</kbd>/<kbd>E</kbd> đội 1 +1/+2/+3 · <kbd>A</kbd> đội 1 −1 · <kbd>Z</kbd> đội 1 foul +1</li>
-        <li><kbd>U</kbd>/<kbd>I</kbd>/<kbd>O</kbd> đội 2 +1/+2/+3 · <kbd>K</kbd> đội 2 −1 · <kbd>M</kbd> đội 2 foul +1</li>
-        <li><kbd>Space</kbd> chạy/dừng giờ · <kbd>R</kbd> reset giờ · <kbd>S</kbd> 24s · <kbd>D</kbd> 14s · <kbd>F</kbd> chạy/dừng 24s · <kbd>V</kbd> ẩn/hiện 24s · <kbd>H</kbd> ẩn/hiện live</li>
+        <li><kbd>Q</kbd>/<kbd>W</kbd> đội 1 +1/+2 · <kbd>A</kbd> đội 1 −1 · <kbd>Z</kbd> đội 1 foul +1</li>
+        <li><kbd>U</kbd>/<kbd>I</kbd> đội 2 +1/+2 · <kbd>K</kbd> đội 2 −1 · <kbd>M</kbd> đội 2 foul +1</li>
+        <li><kbd>Space</kbd> chạy/dừng giờ (kèm tấn công) · <kbd>R</kbd> reset giờ · <kbd>S</kbd> reset tấn công 12s · <kbd>F</kbd> chạy/dừng tấn công · <kbd>V</kbd> ẩn/hiện tấn công · <kbd>H</kbd> ẩn/hiện live</li>
       </ul>
       <p><b>Gọi URL (vMix Navigate / Stream Deck / điện thoại):</b></p>
       <pre data-el="cmd-url">http://localhost:8000/cmd?action=score&team=home&points=2</pre>
@@ -162,8 +160,8 @@
         <li><code>/cmd?action=score&team=home&points=2</code> — đội 1 +2</li>
         <li><code>/cmd?action=foul&team=away&delta=1</code> — foul đội 2 +1</li>
         <li><code>/cmd?action=clock&op=toggle</code> — chạy/dừng giờ</li>
-        <li><code>/cmd?action=shotclock&op=reset&value=24</code> — 24 giây</li>
-        <li><code>/cmd?action=shotclock&op=togglevis</code> — ẩn/hiện 24s</li>
+        <li><code>/cmd?action=shotclock&op=reset&value=12</code> — reset tấn công 12 giây</li>
+        <li><code>/cmd?action=shotclock&op=togglevis</code> — ẩn/hiện tấn công</li>
       </ul>
     </div>
   </details>

@@ -79,12 +79,12 @@
   });
 
   var KEYS = {
-    q: 'action=score&team=home&points=1', w: 'action=score&team=home&points=2', e: 'action=score&team=home&points=3',
+    q: 'action=score&team=home&points=1', w: 'action=score&team=home&points=2',
     a: 'action=score&team=home&points=-1', z: 'action=foul&team=home&delta=1',
-    u: 'action=score&team=away&points=1', i: 'action=score&team=away&points=2', o: 'action=score&team=away&points=3',
+    u: 'action=score&team=away&points=1', i: 'action=score&team=away&points=2',
     k: 'action=score&team=away&points=-1', m: 'action=foul&team=away&delta=1',
     ' ': 'action=clock&op=toggle', r: 'action=clock&op=reset',
-    s: 'action=shotclock&op=reset&value=24', d: 'action=shotclock&op=reset&value=14',
+    s: 'action=shotclock&op=reset&value=12',       // 3x3: reset 12 giây
     f: 'action=shotclock&op=toggle', v: 'action=shotclock&op=togglevis', h: 'action=visible&value=toggle',
   };
   document.addEventListener('keydown', function (e) {
@@ -129,7 +129,7 @@
     st.textContent = sc.running ? '⏸' : '▶';
     st.classList.toggle('active', !!sc.running);
     var sv = el('shot-vis');
-    sv.textContent = sc.visible ? 'Ẩn 24s' : 'Hiện 24s';
+    sv.textContent = sc.visible ? 'Ẩn' : 'Hiện';
 
     fillInputs();
     tick();

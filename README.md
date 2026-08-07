@@ -47,9 +47,9 @@ Tham số URL cho `/scoreboard`: `?scale=`, `?x=`, `?y=` (vị trí/tỉ lệ). 
 
 Mở `http://localhost:8000/control` — trên **máy chạy OBS**, hoặc **điện thoại/tablet** cùng Wi‑Fi (địa chỉ IP in trong cửa sổ đen).
 
-- **Điểm:** +1 / +2 / +3 và −1. **Fouls:** +1 / −1.
+- **Điểm (3x3):** +1 / +2 và −1. **Fouls:** +1 / −1.
 - **Thời gian:** Chạy/Dừng, Reset, ±1 giây, hoặc gõ `mm:ss` → **Đặt giờ**.
-- **ShotClock:** 24s / 14s / Chạy‑Dừng / **Ẩn‑Hiện**.
+- **Tấn công (3x3 · 12 giây):** nút to **⟳ Reset 12 giây** (bấm mỗi lần đổi quyền tấn công); đồng hồ tấn công **tự chạy/dừng theo đồng hồ trận**; có **Ẩn/Hiện**.
 - **Ẩn/Hiện bảng live**, **Đổi bên**, **Trận mới**.
 - **Cài đặt:** tên đội, **nhãn** (U16…), **tên giải**, phút/trận.
 - **Màu áo** (chip bảng live): chọn bằng **bảng màu bấm nhanh**, ô chọn màu, hoặc gõ **mã màu** `#rrggbb`.
@@ -59,10 +59,10 @@ Mở `http://localhost:8000/control` — trên **máy chạy OBS**, hoặc **đi
 
 | Phím | Tác dụng |
 |---|---|
-| `Q` / `W` / `E` · `A` · `Z` | Đội 1 +1/+2/+3 · −1 · foul +1 |
-| `U` / `I` / `O` · `K` · `M` | Đội 2 +1/+2/+3 · −1 · foul +1 |
-| `Space` · `R` | Chạy/dừng giờ · reset giờ |
-| `S` · `D` · `F` · `V` | 24s · 14s · chạy/dừng 24s · ẩn/hiện 24s |
+| `Q` / `W` · `A` · `Z` | Đội 1 +1/+2 · −1 · foul +1 |
+| `U` / `I` · `K` · `M` | Đội 2 +1/+2 · −1 · foul +1 |
+| `Space` · `R` | Chạy/dừng giờ (kèm tấn công) · reset giờ |
+| `S` · `F` · `V` | Reset tấn công 12s · chạy/dừng tấn công · ẩn/hiện |
 | `H` | Ẩn / hiện bảng live |
 
 ## 5. Điều khiển bằng vMix / Stream Deck

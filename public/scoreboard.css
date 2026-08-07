@@ -46,7 +46,7 @@ html, body {
 
 /* Hàng */
 .row { display: flex; align-items: stretch; }
-.header { margin-left: 32px; width: 500px; }
+.header { margin-left: 46px; width: 504px; }
 
 /* Ô (parallelogram do cả bảng bị skew) */
 .box {
@@ -71,7 +71,7 @@ html, body {
 /* ---- Hàng đội ---- */
 .team .box, .chip { height: 56px; }
 .chip {
-  width: 22px;
+  width: 46px;                            /* to rõ để thấy màu áo đội */
   border: 2px solid var(--white);
   background: #000;
 }

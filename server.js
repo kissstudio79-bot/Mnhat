@@ -36,7 +36,7 @@ function defaultState() {
     },
     periodMinutes: 10,
     gameClock: { remaining: 10 * 60 * 1000, running: false, updatedAt: now },
-    shotClock: { remaining: 24 * 1000, running: false, updatedAt: now, visible: true },
+    shotClock: { remaining: 12 * 1000, running: false, updatedAt: now, visible: true },  // 3x3 = 12 giây
     visible: true,
     version: 0,
   };
@@ -117,11 +117,14 @@ function handleCommand(q) {
       break;
 
     case 'clock': {
-      const c = state.gameClock;
+      const c = state.gameClock, sc = state.shotClock;   // 3x3: đồng hồ tấn công chạy/dừng theo đồng hồ trận
       switch (q.op) {
-        case 'start': startClock(c); break;
-        case 'stop': freezeClock(c); break;
-        case 'toggle': c.running ? freezeClock(c) : startClock(c); break;
+        case 'start': startClock(c); startClock(sc); break;
+        case 'stop': freezeClock(c); freezeClock(sc); break;
+        case 'toggle':
+          if (c.running) { freezeClock(c); freezeClock(sc); }
+          else { startClock(c); startClock(sc); }
+          break;
         case 'adjust': freezeClock(c); c.remaining = Math.max(0, c.remaining + (parseTime(q.value) || 0)); c.updatedAt = Date.now(); break;
         case 'set': case 'reset': {
           freezeClock(c);
@@ -143,8 +146,9 @@ function handleCommand(q) {
         case 'hide': c.visible = false; break;
         case 'togglevis': c.visible = !c.visible; break;
         case 'set': case 'reset':
-          c.remaining = Math.max(0, Math.round((q.value !== undefined ? parseFloat(q.value) : 24) * 1000));
+          c.remaining = Math.max(0, Math.round((q.value !== undefined ? parseFloat(q.value) : 12) * 1000));  // 3x3 = 12 giây
           c.updatedAt = Date.now();
+          c.running = state.gameClock.running;    // reset khi trận đang chạy -> đếm ngược tiếp ngay; đang dừng -> đứng ở 12
           break;
       }
       break;
