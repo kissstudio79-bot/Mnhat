@@ -19,7 +19,7 @@ const os = require('os');
 const PORT = parseInt(process.env.PORT, 10) || 8000;
 const HOST = process.env.HOST || '0.0.0.0';
 const PUBLIC_DIR = path.join(__dirname, 'public');
-const VERSION = 'BUILD-11 (mau-chip + chong-cache + 3x3)';   // để kiểm tra đang chạy đúng bản mới
+const VERSION = 'BUILD-12 (ep-mau-chip)';   // để kiểm tra đang chạy đúng bản mới
 
 // --------------------------------------------------------------------------
 // Trạng thái (thời gian tổng + điểm + lỗi; nhãn hạng mục + tên giải)

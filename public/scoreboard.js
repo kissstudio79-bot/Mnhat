@@ -37,6 +37,16 @@
   }
   function setText(node, txt) { if (node && node.textContent !== txt) node.textContent = txt; }
 
+  // Ép ô màu đội hiển thị đúng, không bị CSS cũ/cache làm hỏng, và không bị ô tên đè lên
+  function paintChip(chipEl, nameSpan, color) {
+    if (chipEl) {
+      chipEl.style.cssText = 'flex:0 0 46px;width:46px;min-width:46px;height:56px;border:2px solid #fff;background:' + color + ';box-sizing:border-box;';
+    }
+    if (nameSpan && nameSpan.parentElement) {
+      nameSpan.parentElement.style.marginLeft = '0px';
+    }
+  }
+
   function render() {
     if (!state) return;
     board.classList.toggle('is-hidden', !state.visible);
@@ -45,9 +55,9 @@
     var root = document.documentElement.style;
     root.setProperty('--home', homeColor);
     root.setProperty('--away', awayColor);
-    // set trực tiếp lên ô chip (chắc chắn hiển thị, không phụ thuộc biến CSS)
-    var hc = el('home-chip'); if (hc) hc.style.background = homeColor;
-    var ac = el('away-chip'); if (ac) ac.style.background = awayColor;
+    // Ép hiển thị ô màu bằng inline style (thắng mọi CSS/cache) + chặn ô tên đè lên chip
+    paintChip(el('home-chip'), el('home-name'), homeColor);
+    paintChip(el('away-chip'), el('away-name'), awayColor);
 
     setText(el('category'), state.category || '');
     setText(el('tournament'), state.tournament || '');
