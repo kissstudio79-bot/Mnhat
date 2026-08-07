@@ -73,7 +73,7 @@ html, body {
 .chip {
   width: 46px;                            /* to rõ để thấy màu áo đội */
   border: 2px solid var(--white);
-  background: #000;
+  background: #1f4fa3;                     /* mặc định CÓ MÀU (JS ghi đè theo màu áo); không bao giờ đen */
 }
 .team:nth-of-type(2) .chip { background: var(--home, #1f4fa3); }
 .team:nth-of-type(3) .chip { background: var(--away, #8b2332); }
