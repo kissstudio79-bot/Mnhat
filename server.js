@@ -19,6 +19,7 @@ const os = require('os');
 const PORT = parseInt(process.env.PORT, 10) || 8000;
 const HOST = process.env.HOST || '0.0.0.0';
 const PUBLIC_DIR = path.join(__dirname, 'public');
+const VERSION = 'BUILD-11 (mau-chip + chong-cache + 3x3)';   // để kiểm tra đang chạy đúng bản mới
 
 // --------------------------------------------------------------------------
 // Trạng thái (thời gian tổng + điểm + lỗi; nhãn hạng mục + tên giải)
@@ -245,6 +246,7 @@ const server = http.createServer((req, res) => {
     return res.end();
   }
   if (pathname === '/events') return handleSSE(req, res);
+  if (pathname === '/version') return sendJSON(res, { version: VERSION });
   if (pathname === '/state') return sendJSON(res, { state, serverNow: Date.now() });
 
   if (pathname === '/cmd' || pathname === '/api') {
@@ -311,7 +313,8 @@ function lanIPs() {
   return out;
 }
 server.listen(PORT, HOST, () => {
-  console.log('\n  🏀  Bảng điểm Bóng rổ (vMix/OBS) đang chạy!\n');
+  console.log('\n  🏀  Bảng điểm Bóng rổ (vMix/OBS) đang chạy!');
+  console.log('  Phiên bản: ' + VERSION + '\n');
   console.log('  ┌─ Mở các đường dẫn sau:');
   console.log(`  │  • Bảng điều khiển : http://localhost:${PORT}/control`);
   console.log(`  │  • Bảng điểm (OBS) : http://localhost:${PORT}/scoreboard`);
