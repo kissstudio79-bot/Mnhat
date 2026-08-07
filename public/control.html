@@ -87,22 +87,59 @@
       <div class="set-col">
         <h3>Đội 1 (TV trái · live hàng trên)</h3>
         <label>Tên đội <input class="inp" data-field="teams.home.name" /></label>
-        <label>Màu áo (chip bảng live) <input type="color" data-field="teams.home.color" /></label>
+        <div class="field-label">Màu áo (chip bảng live)</div>
+        <div class="color-picker">
+          <input type="color" class="color-native" data-field="teams.home.color" />
+          <input type="text" class="inp color-hex" data-field="teams.home.color" placeholder="#1f4fa3" maxlength="7" spellcheck="false" />
+        </div>
+        <div class="swatches" data-target="teams.home.color">
+          <button class="sw" data-color="#e11d1d" style="background:#e11d1d"></button>
+          <button class="sw" data-color="#1f4fa3" style="background:#1f4fa3"></button>
+          <button class="sw" data-color="#ff7a18" style="background:#ff7a18"></button>
+          <button class="sw" data-color="#ffd21e" style="background:#ffd21e"></button>
+          <button class="sw" data-color="#17a34a" style="background:#17a34a"></button>
+          <button class="sw" data-color="#00b3ff" style="background:#00b3ff"></button>
+          <button class="sw" data-color="#6d28d9" style="background:#6d28d9"></button>
+          <button class="sw" data-color="#ec4899" style="background:#ec4899"></button>
+          <button class="sw" data-color="#111111" style="background:#111111"></button>
+          <button class="sw" data-color="#ffffff" style="background:#ffffff"></button>
+        </div>
       </div>
 
       <div class="set-col">
         <h3>Chung</h3>
         <label>Nhãn trái live (VD: U16) <input class="inp" data-field="category" /></label>
         <label>Tên giải (VD: INVITATION CUP) <input class="inp" data-field="tournament" /></label>
-        <label>Logo giữa (bảng TV) <input class="inp" data-field="logo" placeholder="https://... hoặc /logo.png" /></label>
-        <label>Phút/trận <input class="inp" type="number" data-field="periodMinutes" /></label>
+        <div class="field-label">Logo giữa (bảng TV)</div>
+        <div class="logo-row">
+          <input class="inp" data-field="logo" placeholder="/logo.png hoặc https://..." />
+          <label class="btn tiny upload-btn">📁 Tải lên<input type="file" accept="image/*" data-upload="logo" hidden /></label>
+        </div>
+        <div class="upload-status" data-el="upload-status"></div>
+        <label style="margin-top:8px">Phút/trận <input class="inp" type="number" data-field="periodMinutes" /></label>
         <button class="btn ghost" data-cmd="action=resetScores" style="margin-top:4px">Xoá điểm &amp; lỗi</button>
       </div>
 
       <div class="set-col">
         <h3>Đội 2 (TV phải · live hàng dưới)</h3>
         <label>Tên đội <input class="inp" data-field="teams.away.name" /></label>
-        <label>Màu áo (chip bảng live) <input type="color" data-field="teams.away.color" /></label>
+        <div class="field-label">Màu áo (chip bảng live)</div>
+        <div class="color-picker">
+          <input type="color" class="color-native" data-field="teams.away.color" />
+          <input type="text" class="inp color-hex" data-field="teams.away.color" placeholder="#8b2332" maxlength="7" spellcheck="false" />
+        </div>
+        <div class="swatches" data-target="teams.away.color">
+          <button class="sw" data-color="#e11d1d" style="background:#e11d1d"></button>
+          <button class="sw" data-color="#1f4fa3" style="background:#1f4fa3"></button>
+          <button class="sw" data-color="#ff7a18" style="background:#ff7a18"></button>
+          <button class="sw" data-color="#ffd21e" style="background:#ffd21e"></button>
+          <button class="sw" data-color="#17a34a" style="background:#17a34a"></button>
+          <button class="sw" data-color="#00b3ff" style="background:#00b3ff"></button>
+          <button class="sw" data-color="#6d28d9" style="background:#6d28d9"></button>
+          <button class="sw" data-color="#ec4899" style="background:#ec4899"></button>
+          <button class="sw" data-color="#111111" style="background:#111111"></button>
+          <button class="sw" data-color="#ffffff" style="background:#ffffff"></button>
+        </div>
       </div>
     </div>
     <p class="hint">💡 Cả 2 màn hình dùng chung dữ liệu này — bấm 1 nút, cả TV lẫn live đều nhảy.

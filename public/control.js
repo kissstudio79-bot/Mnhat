@@ -11,7 +11,14 @@
     send('action=set&path=' + encodeURIComponent(path) + '&value=' + encodeURIComponent(value));
   }
 
+  // Nút lệnh + bảng màu (swatch)
   document.addEventListener('click', function (e) {
+    var sw = e.target.closest('.sw[data-color]');
+    if (sw) {
+      var box = sw.closest('.swatches');
+      if (box && box.dataset.target) setField(box.dataset.target, sw.dataset.color);
+      return;
+    }
     var b = e.target.closest('[data-cmd]');
     if (!b) return;
     if (b.dataset.confirm && !window.confirm(b.dataset.confirm)) return;
@@ -24,37 +31,61 @@
     if (v) send('action=clock&op=set&value=' + encodeURIComponent(v));
   });
 
-  // Ô cài đặt (data-field). Với ô màu: gửi cả khi kéo (input) lẫn khi chọn xong (change).
+  // Ô cài đặt (data-field)
+  var HEX = /^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/;
   var fields = Array.prototype.slice.call(document.querySelectorAll('[data-field]'));
   fields.forEach(function (inp) {
     var isColor = inp.type === 'color';
+    var isHex = inp.classList.contains('color-hex');
     var t = null;
     var fire = function () {
+      var val = String(inp.value);
+      if (isHex) {
+        val = val.trim();
+        if (!HEX.test(val)) return;                 // chỉ gửi khi mã màu hợp lệ
+        if (val[0] !== '#') val = '#' + val;
+      }
       clearTimeout(t);
-      t = setTimeout(function () { setField(inp.dataset.field, inp.value); }, isColor ? 100 : 0);
+      t = setTimeout(function () { setField(inp.dataset.field, val); }, (isColor || isHex) ? 100 : 0);
     };
     inp.addEventListener('change', fire);
-    if (isColor) inp.addEventListener('input', fire);
+    if (isColor || isHex) inp.addEventListener('input', fire);
+  });
+
+  // Tải ảnh (logo) lên
+  Array.prototype.forEach.call(document.querySelectorAll('[data-upload]'), function (inp) {
+    inp.addEventListener('change', function () {
+      var f = inp.files && inp.files[0];
+      if (!f) return;
+      var status = el('upload-status');
+      if (status) { status.textContent = 'Đang tải "' + f.name + '"…'; status.className = 'upload-status'; }
+      var ext = (f.name.split('.').pop() || 'png').toLowerCase();
+      var done = function (j) {
+        if (!status) return;
+        if (j && j.ok) { status.textContent = '✓ Đã tải logo lên'; status.className = 'upload-status ok'; }
+        else { status.textContent = 'Lỗi: ' + ((j && j.error) || 'không tải được'); status.className = 'upload-status err'; }
+      };
+      var upload = function (buf) {
+        return fetch('/upload?field=' + encodeURIComponent(inp.dataset.upload) + '&ext=' + encodeURIComponent(ext),
+          { method: 'POST', headers: { 'Content-Type': 'application/octet-stream' }, body: buf })
+          .then(function (r) { return r.json(); }).then(done);
+      };
+      var reader = new FileReader();
+      reader.onload = function () { upload(reader.result).catch(function (err) { done({ ok: false, error: String(err) }); }); };
+      reader.onerror = function () { done({ ok: false, error: 'đọc file lỗi' }); };
+      reader.readAsArrayBuffer(f);
+      inp.value = '';
+    });
   });
 
   var KEYS = {
-    q: 'action=score&team=home&points=1',
-    w: 'action=score&team=home&points=2',
-    e: 'action=score&team=home&points=3',
-    a: 'action=score&team=home&points=-1',
-    z: 'action=foul&team=home&delta=1',
-    u: 'action=score&team=away&points=1',
-    i: 'action=score&team=away&points=2',
-    o: 'action=score&team=away&points=3',
-    k: 'action=score&team=away&points=-1',
-    m: 'action=foul&team=away&delta=1',
-    ' ': 'action=clock&op=toggle',
-    r: 'action=clock&op=reset',
-    s: 'action=shotclock&op=reset&value=24',
-    d: 'action=shotclock&op=reset&value=14',
-    f: 'action=shotclock&op=toggle',
-    v: 'action=shotclock&op=togglevis',
-    h: 'action=visible&value=toggle',
+    q: 'action=score&team=home&points=1', w: 'action=score&team=home&points=2', e: 'action=score&team=home&points=3',
+    a: 'action=score&team=home&points=-1', z: 'action=foul&team=home&delta=1',
+    u: 'action=score&team=away&points=1', i: 'action=score&team=away&points=2', o: 'action=score&team=away&points=3',
+    k: 'action=score&team=away&points=-1', m: 'action=foul&team=away&delta=1',
+    ' ': 'action=clock&op=toggle', r: 'action=clock&op=reset',
+    s: 'action=shotclock&op=reset&value=24', d: 'action=shotclock&op=reset&value=14',
+    f: 'action=shotclock&op=toggle', v: 'action=shotclock&op=togglevis', h: 'action=visible&value=toggle',
   };
   document.addEventListener('keydown', function (e) {
     var tag = (e.target.tagName || '').toLowerCase();
@@ -67,10 +98,7 @@
   function now() { return Date.now() + clockOffset; }
   function liveRemaining(c) { return c && c.running ? Math.max(0, c.remaining - (now() - c.updatedAt)) : (c ? c.remaining : 0); }
   function fmtClock(ms) {
-    if (ms >= 60000) {
-      var total = Math.ceil(ms / 1000), m = Math.floor(total / 60), s = total % 60;
-      return m + ':' + (s < 10 ? '0' + s : s);
-    }
+    if (ms >= 60000) { var t = Math.ceil(ms / 1000), m = Math.floor(t / 60), s = t % 60; return m + ':' + (s < 10 ? '0' + s : s); }
     return (Math.max(0, ms) / 1000).toFixed(1);
   }
   function fmtShot(ms) { var s = Math.max(0, ms) / 1000; return s < 5 ? s.toFixed(1) : String(Math.ceil(s)); }

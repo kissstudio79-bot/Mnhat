@@ -255,6 +255,32 @@ const server = http.createServer((req, res) => {
     return sendJSON(res, { ok: true, version: state.version });
   }
 
+  // Tải ảnh (logo) lên: POST /upload?field=logo&ext=png  (body = dữ liệu ảnh thô)
+  if (pathname === '/upload' && req.method === 'POST') {
+    const field = u.searchParams.get('field') || 'logo';
+    let ext = String(u.searchParams.get('ext') || 'png').toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (!{ png: 1, jpg: 1, jpeg: 1, gif: 1, webp: 1, svg: 1 }[ext]) ext = 'png';
+    const chunks = []; let size = 0; let tooBig = false;
+    req.on('data', (c) => { size += c.length; if (size > 8e6) { tooBig = true; req.destroy(); } else chunks.push(c); });
+    req.on('end', () => {
+      if (tooBig) return sendJSON(res, { ok: false, error: 'File quá lớn (>8MB)' }, 413);
+      try {
+        const dir = path.join(PUBLIC_DIR, 'uploads');
+        fs.mkdirSync(dir, { recursive: true });
+        const name = 'u-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7) + '.' + ext;
+        fs.writeFileSync(path.join(dir, name), Buffer.concat(chunks));
+        if (field === 'logo' || field === 'teams.home.logo' || field === 'teams.away.logo') {
+          setByPath(state, field, '/uploads/' + name);
+          broadcast();
+        }
+        sendJSON(res, { ok: true, path: '/uploads/' + name });
+      } catch (e) {
+        sendJSON(res, { ok: false, error: String(e) }, 500);
+      }
+    });
+    return;
+  }
+
   let file = pathname;
   if (file === '/') file = '/index.html';
   else if (file === '/control') file = '/control.html';

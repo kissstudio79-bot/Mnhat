@@ -152,6 +152,24 @@ input[type=color] {
   background: #0e1015; cursor: pointer; margin-top: 4px;
 }
 
+/* Chọn màu: ô color + ô mã hex + bảng màu bấm nhanh */
+.field-label { font-size: 13px; color: var(--dim); margin: 2px 0 6px; }
+.color-picker { display: flex; gap: 8px; align-items: center; }
+.color-picker input[type="color"].color-native { width: 56px; height: 42px; flex: 0 0 56px; margin-top: 0; border: 1px solid var(--line); border-radius: 9px; background: #0e1015; cursor: pointer; padding: 3px; }
+.color-picker .color-hex { flex: 1 1 auto; width: auto; min-width: 0; text-transform: lowercase; font-family: var(--font-num); letter-spacing: .5px; }
+.swatches { display: flex; flex-wrap: wrap; gap: 7px; margin: 9px 0 4px; }
+.sw { width: 34px; height: 34px; border-radius: 8px; border: 2px solid rgba(255,255,255,.18); cursor: pointer; padding: 0; transition: transform .05s ease; }
+.sw:hover { transform: scale(1.08); }
+.sw:active { transform: scale(.94); }
+
+/* Tải logo lên */
+.logo-row { display: flex; gap: 8px; align-items: center; }
+.logo-row .inp { flex: 1; }
+.upload-btn { flex: 0 0 auto; cursor: pointer; white-space: nowrap; }
+.upload-status { font-size: 12px; color: var(--dim); min-height: 15px; margin-top: 4px; }
+.upload-status.ok { color: var(--green); }
+.upload-status.err { color: var(--away); }
+
 .hint { margin: 14px 2px 2px; font-size: 13px; color: var(--dim); }
 .hint code { padding: 1px 6px; }
 .help { font-size: 14px; color: var(--ink); line-height: 1.6; }

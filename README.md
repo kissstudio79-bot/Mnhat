@@ -51,7 +51,9 @@ Mở `http://localhost:8000/control` — trên **máy chạy OBS**, hoặc **đi
 - **Thời gian:** Chạy/Dừng, Reset, ±1 giây, hoặc gõ `mm:ss` → **Đặt giờ**.
 - **ShotClock:** 24s / 14s / Chạy‑Dừng / **Ẩn‑Hiện**.
 - **Ẩn/Hiện bảng live**, **Đổi bên**, **Trận mới**.
-- **Cài đặt:** tên đội, **màu áo** (chip bảng live), **nhãn** (U16…), **tên giải**, **logo giữa** (bảng TV), phút/trận.
+- **Cài đặt:** tên đội, **nhãn** (U16…), **tên giải**, phút/trận.
+- **Màu áo** (chip bảng live): chọn bằng **bảng màu bấm nhanh**, ô chọn màu, hoặc gõ **mã màu** `#rrggbb`.
+- **Logo giữa** (bảng TV): bấm **📁 Tải lên** để chọn ảnh từ máy (tự lưu, tự áp), hoặc dán đường dẫn `/logo.png` / link online.
 
 ### Phím tắt (khi con trỏ không nằm trong ô nhập)
 
