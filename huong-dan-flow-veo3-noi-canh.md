@@ -10,6 +10,8 @@ Veo 3 chỉ tạo **8 giây mỗi lần**. Muốn video dài 16–26 giây mà k
 
 ---
 
+> **Cập nhật quan trọng (theo tìm kiếm mới):** Một số nguồn cho biết nút **Extend** trong Flow không chạy được với Veo 3.1 **Quality/Fast**: hoặc chỉ dùng được Veo 3.1 Lite, hoặc tự chuyển sang model đời thấp hơn (mất tiếng, chất lượng kém hơn). Nếu nút Extend của bạn không cho chọn Veo 3 Quality, hãy dùng **cách Frames to Video** (mục "Nếu Extend bị lỗi" bên dưới). Đó là cách ổn định nhất. Khi dùng cách này, **dán lại y nguyên khối mô tả nhân vật, trang phục, phòng** của Cảnh 1 vào prompt Cảnh 2, chỉ thay phần hành động. Một cách khác là **Ingredients to Video** (Veo 3.1): tải 1–3 ảnh nhân vật lên để Veo giữ mặt.
+
 ## BƯỚC 0: Vào Flow
 1. Mở trình duyệt Chrome và vào **labs.google/flow**.
 2. Đăng nhập bằng tài khoản Google có gói **AI Ultra**.
