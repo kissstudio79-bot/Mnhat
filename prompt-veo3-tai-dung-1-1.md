@@ -2,10 +2,8 @@
 
 Nguồn: `kich-ban-tai-dung-1-1-oan-uc.md`. Ảnh nhân vật: thư mục `nhan-vat/`.
 
-## Trước khi dán prompt
-Thay 2 chỗ `[TỪ CẦN XÁC NHẬN]` bằng từ bạn tự nghe được trong video gốc. Đây là những chỗ máy không nghe rõ:
-- Clip 1, khoảng giây 3,58: máy nghe ra "chụm" hoặc "chùm".
-- Clip 3, khoảng giây 0,5 (tức giây 13,7 trong video gốc): máy nghe ra "bào" hoặc "bao".
+## Lời thoại
+Lời thoại đã được chốt theo bản bạn tự nghe và gửi: "trạm", "bao", "Đằng đây". Các mốc giây và hành động lấy từ phân tích khung hình của video gốc.
 
 ## Quy trình (Google Flow)
 1. **Ảnh khung đầu:**
@@ -41,9 +39,9 @@ CHARACTERS:
 
 TIMELINE (Vietnamese dialogue, exact words, no extra words):
 0.0-2.3s: Nobody moves. The girl, still facing the wall so her mouth is hidden, says fast in a high whiny toddler voice: "Con sai thì nói một lần thôi, con biết mà". Mom keeps her eyes half-closed, looking down at the girl, closed-lip smile, lips not moving.
-2.3-4.1s: Mom lifts her head and speaks in a natural lower female voice, teasing and innocent: "Đã ai làm gì đâu, đã ai [TỪ CẦN XÁC NHẬN] vào đâu". At 2.5s her left hand quickly rises from her knee to an open flat palm facing the camera, fingers pointing up, beside the girl's waist, then slowly drifts up to chest height; eyebrows raised, wide innocent eyes. At 3.5s the girl glances slightly over her left shoulder.
+2.3-4.1s: Mom lifts her head and speaks in a natural lower female voice, teasing and innocent: "Đã ai làm gì đâu, đã ai trạm vào đâu". At 2.5s her left hand quickly rises from her knee to an open flat palm facing the camera, fingers pointing up, beside the girl's waist, then slowly drifts up to chest height; eyebrows raised, wide innocent eyes. At 3.5s the girl glances slightly over her left shoulder.
 4.1-4.4s: Short pause, Mom still holding her hand up, smiling.
-4.4-7.3s: At 4.75s the girl turns her head over her left shoulder toward Mom and the camera, pouting, teary, and says in a high whiny voice that breaks into crying: "Đang đây cứ chửi hoài vậy, chửi từ sáng tới chiều luôn". Mom closes her lips into a smile and slowly lowers her hand back to her knee by 5.0s. At 6.0s the girl's mouth opens in a cry and her eyes squeeze shut; from 6.5s to 7.25s she raises one hand and rubs her eye and nose, head down, shoulders hunched. Mom only smiles, head tilted toward her.
+4.4-7.3s: At 4.75s the girl turns her head over her left shoulder toward Mom and the camera, pouting, teary, and says in a high whiny voice that breaks into crying: "Đằng đây cứ chửi hoài vậy, chửi từ sáng tới chiều luôn". Mom closes her lips into a smile and slowly lowers her hand back to her knee by 5.0s. At 6.0s the girl's mouth opens in a cry and her eyes squeeze shut; from 6.5s to 7.25s she raises one hand and rubs her eye and nose, head down, shoulders hunched. Mom only smiles, head tilted toward her.
 
 AUDIO: only the dialogue and quiet room tone, no music, no sound effects.
 No text, no subtitles, no watermark, no phone UI.
@@ -82,7 +80,7 @@ CHARACTERS:
 - GIRL: toddler girl, small top bun with a strawberry hair tie, pastel yellow knit cardigan over a white floral dress, in Mom's arms on the RIGHT of the frame, cheek against Mom's cheek.
 
 TIMELINE (Vietnamese dialogue, exact words, no extra words):
-0.0-1.1s: The girl, frowning, red-faced, lip trembling, eyes glancing sideways then at the camera, says in a shaky, hurt, high toddler voice: "Thế mà [TỪ CẦN XÁC NHẬN] yêu". Mom keeps a closed-lip smile with squinting eyes, looking at the camera, lips not moving.
+0.0-1.1s: The girl, frowning, red-faced, lip trembling, eyes glancing sideways then at the camera, says in a shaky, hurt, high toddler voice: "Thế mà bao yêu". Mom keeps a closed-lip smile with squinting eyes, looking at the camera, lips not moving.
 1.1-1.7s: Short pause, a small breath in; both hold still.
 1.8-3.3s: Mom bursts out laughing loudly: mouth wide open showing teeth, eyes squeezed shut, head tipping back slightly, shoulders shaking, in bursts of laughter. The girl keeps pouting, looking at the camera, not laughing.
 3.5-3.75s: Mom's laughter fades into a big smile.
