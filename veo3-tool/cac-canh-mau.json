@@ -1,0 +1,4 @@
+[
+  { "name": "canh-1", "prompt": "Cận cảnh một chú mèo cam chạy trên bãi biển lúc hoàng hôn, sóng vỗ, tiếng gió và tiếng sóng.", "ratio": "9:16" },
+  { "name": "canh-2", "prompt": "Chú mèo cam ngồi nhìn mặt trời lặn, máy quay lùi chậm, nhạc piano nhẹ.", "ratio": "9:16", "model": "veo3-fast" }
+]
